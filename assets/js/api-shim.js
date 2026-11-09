@@ -1211,6 +1211,14 @@
     if (error) return errRes(error.message, 400);
     return okRes(data);
   });
+  /* حملات البائع → جدول campaigns العام (اللي الزوار بيشوفوه) */
+  on('PUT', 'seller/campaigns', async (params, query, body) => {
+    const session = await requireSeller();
+    if (!session) return errRes('هذه الصفحة مخصصة للبائعين.', 403);
+    const { data, error } = await sb.rpc('seller_campaigns_sync', { p_list: (body && Array.isArray(body.list)) ? body.list : [] });
+    if (error) return errRes(error.message, 400);
+    return okRes(data);
+  });
 
   /* ===================== الإشعارات (مشترك بائع/مشترٍ) ===================== */
   on('GET', 'notifications/mine', async (params, query) => {

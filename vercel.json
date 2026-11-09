@@ -141,6 +141,61 @@
       "source": "/pages/store",
       "destination": "/store",
       "permanent": true
+    },
+    {
+      "source": "/offers",
+      "destination": "/daily-offers",
+      "permanent": true
+    },
+    {
+      "source": "/deals",
+      "destination": "/daily-offers",
+      "permanent": true
+    },
+    {
+      "source": "/best-sellers",
+      "destination": "/bestsellers",
+      "permanent": true
+    },
+    {
+      "source": "/category",
+      "destination": "/categories",
+      "permanent": true
+    },
+    {
+      "source": "/category/:cat",
+      "destination": "/categories/:cat",
+      "permanent": true
+    },
+    {
+      "source": "/coupon",
+      "destination": "/coupons",
+      "permanent": true
+    },
+    {
+      "source": "/coupon/:code",
+      "destination": "/coupons/:code",
+      "permanent": true
+    },
+    {
+      "source": "/campaign",
+      "destination": "/campaigns",
+      "permanent": true
+    },
+    {
+      "source": "/campaign/:c",
+      "destination": "/campaigns/:c",
+      "permanent": true
+    },
+    {
+      "source": "/collection.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pages/collection",
+      "destination": "/",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -187,6 +242,58 @@
     {
       "source": "/store",
       "destination": "/pages/store.html"
+    },
+    {
+      "source": "/bestsellers/:market/:name",
+      "destination": "/pages/product.html"
+    },
+    {
+      "source": "/daily-offers/:market/:name",
+      "destination": "/pages/product.html"
+    },
+    {
+      "source": "/categories/:cat/:market/:name",
+      "destination": "/pages/product.html"
+    },
+    {
+      "source": "/store/:slug/:name",
+      "destination": "/pages/product.html"
+    },
+    {
+      "source": "/coupons",
+      "destination": "/pages/collection.html"
+    },
+    {
+      "source": "/coupons/:code",
+      "destination": "/pages/collection.html"
+    },
+    {
+      "source": "/campaigns",
+      "destination": "/pages/collection.html"
+    },
+    {
+      "source": "/campaigns/:campaign",
+      "destination": "/pages/collection.html"
+    },
+    {
+      "source": "/bestsellers",
+      "destination": "/pages/collection.html"
+    },
+    {
+      "source": "/daily-offers",
+      "destination": "/pages/collection.html"
+    },
+    {
+      "source": "/categories",
+      "destination": "/pages/collection.html"
+    },
+    {
+      "source": "/categories/:cat",
+      "destination": "/pages/collection.html"
+    },
+    {
+      "source": "/categories/:cat/:store",
+      "destination": "/pages/collection.html"
     }
   ]
 }

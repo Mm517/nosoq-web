@@ -164,7 +164,15 @@
         if (window.NasaqCloud) window.NasaqCloud.saveSession(data);
         return data;
       },
-      success: { url: '/', delay: 4000 }
+      success: {
+        /* جاي من لوحة البائع/المندوب؟ بعد إنشاء الحساب رجّعه لها ومعاه الجلسة */
+        url: function () {
+          const n = new URLSearchParams(location.search).get('next');
+          if ((n === 'seller' || n === 'driver') && window.NasaqLinks) return window.NasaqLinks.url(n, '/') + window.NasaqLinks.authHash();
+          return '/';
+        },
+        delay: 4000
+      }
     });
 
     /* لو في مسودة محفوظة (refresh) نفتح تبويب «إنشاء حساب» تلقائياً بدل صفحة الدخول */

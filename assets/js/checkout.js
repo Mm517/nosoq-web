@@ -198,14 +198,31 @@
     payBtn.disabled = true;
     payBtn.querySelector('[data-pay-label]').textContent = 'جارٍ إتمام الطلب…';
 
+    /* تحقق من الكوبون في السيرفر قبل ما نكمّل (الكود/الحد الأدنى/الصلاحية/عدد الاستخدامات) */
+    const usedCoupon = totals.coupon && totals.coupon.valid ? totals.coupon.code : null;
+    (Cart.verifyCoupon ? Cart.verifyCoupon() : Promise.resolve({ ok: true })).then((v) => {
+      if (v && v.ok === false) {
+        Cart.removeCoupon();
+        payBtn.disabled = false;
+        payBtn.querySelector('[data-pay-label]').textContent = 'إتمام الطلب';
+        errBox.hidden = false;
+        errBox.textContent = (v.message || 'الكوبون غير صالح') + ' — تم إزالته من طلبك، راجع الإجمالي وأكمل.';
+        return;
+      }
+      submit(usedCoupon);
+    });
+
+    function submit(couponCode) {
     /* هنا يُستدعى الخادم/بوابة الدفع. نحاكي الانتظار فقط. */
     setTimeout(() => {
       done = true;
       const number = 'NQ-' + Date.now().toString(36).toUpperCase().slice(-5) + Math.floor(Math.random() * 90 + 10);
       if (window.Market) window.Market.orders.record({ number, totals, lines, customer, method: m, pay });   // يظهر عند البائع كطلب وارد
+      if (couponCode && Cart.redeemCoupon) Cart.redeemCoupon(couponCode);   // عدّاد استخدام الكوبون في السيرفر
       Cart.clear();
       showConfirmation({ number, totals, lines, customer, method: m, pay });
     }, 900);
+    }
   }
 
   function showConfirmation(o) {

@@ -18,6 +18,12 @@ nosoq-main/
 | المنتجات | `/shop` · `/shop?cat=clothes` |
 | منتج | `/product/<اسم-المتجر>/<اسم-المنتج>` |
 | منتج من حملة | `/campaigns/<اسم-الحملة>/<اسم-المنتج>` |
+| الحملات | `/campaigns` · `/campaigns/<اسم-الحملة>` |
+| الكوبونات | `/coupons` · `/coupons/<الكود>` (مثال `/coupons/NASAQ10`) |
+| الأكثر مبيعاً | `/bestsellers` · `/bestsellers/<المتجر>/<المنتج>` |
+| عروض اليوم | `/daily-offers` · `/daily-offers/<المتجر>/<المنتج>` |
+| الأقسام | `/categories` · `/categories/<القسم>` · `/categories/<القسم>/<المتجر>` · `/categories/<القسم>/<المتجر>/<المنتج>` |
+| منتج داخل متجر | `/store/<slug>/<المنتج>` |
 | متجر بائع | `/store/<slug>` |
 | لوحة الأدمن | `/admin` · `/admin/order?id=...` |
 | لوحة البائع | `/seller` ← https://nosoq-seller.vercel.app (مع تمرير الجلسة) |
@@ -31,3 +37,8 @@ Framework Preset = **Other** · Build Command = فاضي · Output Directory = �
 - **عناوين المنصات** في `NASAQ_LINKS` أول الملف — غيّر `main` لدومين المتجر الفعلي.
 - **الجلسة**: عند الانتقال لمنصة تانية بتتبعت في الـ `#fragment` وبتتمسح من الرابط فوراً.
 - `/auth?next=seller` أو `?next=driver`: بعد تسجيل الدخول يرجّع المستخدم للوحته.
+
+## ملاحظات على الصفحات الجديدة
+- كل صفحات القوائم (`/coupons` `/campaigns` `/bestsellers` `/daily-offers` `/categories`) بتتخدم من `pages/collection.html` + `assets/js/collection-page.js`.
+- صفحة المنتج في أي سياق هي نفس `pages/product.html` (الـ canonical دايماً `/product/...`).
+- **الكوبونات** بتتحمّل من جدول `coupons` في Supabase (`assets/js/cart.js`) — أدمن/بائع بيضيفوها من لوحاتهم. **الحملات** بتتنشر من لوحة البائع لجدول `campaigns` وبيقراها الزوار من الـ view `public_campaigns`. شغّل `database/coupons_campaigns.sql` مرة واحدة. التفاصيل في `اقرأني-تشغيل-وربط.md` في جذر الحزمة.

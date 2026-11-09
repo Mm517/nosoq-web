@@ -1,7 +1,8 @@
 /* ==========================================================================
    js/product-page.js — معرض صور بتكبير جانبي وعارض كامل، اللون/المقاس/الكمية، موعد التوصيل،
    «يُشترى معاً»، كاروسيل المنتجات المشابهة وآخر المشاهدات، schema.org
-   الروابط: /product/<المتجر>/<المنتج>  و  /campaigns/<الحملة>/<المنتج>  (والقديم /product?id=6 بيتحوّل تلقائياً)
+   الروابط: /product/<المتجر>/<المنتج> · /campaigns/<الحملة>/<المنتج> · /bestsellers/<المتجر>/<المنتج>
+   · /daily-offers/<المتجر>/<المنتج> · /store/<المتجر>/<المنتج> · /categories/<القسم>/<المتجر>/<المنتج>  (والقديم /product?id=6 بيتحوّل تلقائياً)
    ========================================================================== */
 (function () {
   'use strict';
@@ -24,6 +25,15 @@
     p = Products.bySlug(seg[2], campaign ? campaign.sellerId : null) || (campaign && campaign.productId != null ? Products.byId(campaign.productId) : null);
   } else if (seg[0] === 'product' && seg.length >= 3) {
     p = Products.byPath(seg[1], seg[2]);
+  } else if (seg[0] === 'store' && seg.length >= 3) {
+    /* /store/<المتجر>/<المنتج> */
+    p = Products.byPath(seg[1], seg[2]);
+  } else if ((seg[0] === 'bestsellers' || seg[0] === 'daily-offers') && seg.length >= 3) {
+    /* /bestsellers/<المتجر>/<المنتج>  و  /daily-offers/<المتجر>/<المنتج> */
+    p = Products.byPath(seg[1], seg[2]);
+  } else if (seg[0] === 'categories' && seg.length >= 4) {
+    /* /categories/<القسم>/<المتجر>/<المنتج> */
+    p = Products.byPath(seg[2], seg[3]);
   } else if (legacyId) {
     p = Products.byId(legacyId);
     if (p) { try { history.replaceState(null, '', Products.url(p)); } catch (_) { /* تجاهل */ } }

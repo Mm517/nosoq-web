@@ -73,4 +73,11 @@
     '</section>' +
     (list.length ? '<div class="grid grid--4">' + UI.cards(list) + '</div>'
       : UI.emptyHTML({ icon: 'box', title: 'لا توجد منتجات منشورة بعد', text: 'سيظهر هنا كل ما ينشره هذا المتجر.', actions: [{ label: 'تصفّح كل المنتجات', href: '/shop', primary: true }] }));
+
+  /* روابط منتجات المتجر: /store/<المتجر>/<المنتج> (الحملات المموّلة تفضل على /campaigns/...) */
+  root.querySelectorAll('[data-id]').forEach((el) => {
+    const p = Products.byId(el.getAttribute('data-id')); if (!p) return;
+    const u = '/store/' + encodeURIComponent(Products.storeSlug(p)) + '/' + Products.url(p).split('/').pop();
+    el.querySelectorAll('a[href^="/product/"]').forEach((a) => a.setAttribute('href', u));
+  });
 })();

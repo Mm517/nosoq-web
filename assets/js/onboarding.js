@@ -121,6 +121,8 @@
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || 'تعذّر إنشاء الحساب.');
         if (window.NasaqCloud) window.NasaqCloud.saveSession(data);
+        const nxt = new URLSearchParams(location.search).get('next');
+        if ((nxt === 'seller' || nxt === 'driver') && window.NasaqLinks) { window.NasaqLinks.go(nxt, '/'); return; }
         location.href = '/';
       } catch (error) {
         formError(signupForm, error.message);

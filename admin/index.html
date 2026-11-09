@@ -48,6 +48,8 @@
           <button class="admin-tab" data-tab="products" type="button"><svg class="ic"><use href="#i-box"/></svg><span>المنتجات</span></button>
           <button class="admin-tab" data-tab="financial" type="button"><svg class="ic"><use href="#i-chart"/></svg><span>اللوحة المالية</span></button>
           <button class="admin-tab" data-tab="transactions" type="button"><svg class="ic"><use href="#i-wallet"/></svg><span>المعاملات</span></button>
+          <button class="admin-tab" data-tab="coupons" type="button"><svg class="ic"><use href="#i-wallet"/></svg><span>الكوبونات</span></button>
+          <button class="admin-tab" data-tab="campaigns" type="button"><svg class="ic"><use href="#i-apps"/></svg><span>الحملات</span></button>
         </nav>
         <div class="admin-side__foot">
           <p id="admin-identity" dir="ltr">—</p>
@@ -181,6 +183,49 @@
             <tbody id="transactions-body"></tbody>
           </table></div>
           <p class="admin-empty" id="transactions-empty" hidden>لا توجد معاملات بعد.</p>
+        </article>
+      </section>
+
+      <!-- الكوبونات -->
+      <section class="admin-panel" id="panel-coupons">
+        <div class="admin-toolbar">
+          <div><h1>كوبونات الخصم</h1><p>كوبونات المنصة (كل المتاجر) وكوبونات البائعين. الأكواد بتتحمّل في المتجر من جدول coupons.</p></div>
+        </div>
+        <article class="admin-card admin-card--wide">
+          <h2>إضافة كوبون للمنصة</h2>
+          <form id="coupon-form" class="admin-toolbar__filters" style="flex-wrap:wrap;gap:.6rem;align-items:end" novalidate autocomplete="off">
+            <label>الكود<br><input class="admin-select" id="cpn-code" dir="ltr" maxlength="20" placeholder="SUMMER15" style="text-transform:uppercase"></label>
+            <label>النوع<br><select class="admin-select" id="cpn-type"><option value="percent">نسبة %</option><option value="fixed">مبلغ ثابت</option><option value="shipping">شحن مجاني</option></select></label>
+            <label>القيمة<br><input class="admin-select" id="cpn-value" dir="ltr" inputmode="decimal" placeholder="10" style="width:90px"></label>
+            <label>أقصى خصم<br><input class="admin-select" id="cpn-max" dir="ltr" inputmode="decimal" placeholder="اختياري" style="width:100px"></label>
+            <label>حد أدنى للطلب<br><input class="admin-select" id="cpn-min" dir="ltr" inputmode="decimal" placeholder="0" style="width:100px"></label>
+            <label>عدد الاستخدامات<br><input class="admin-select" id="cpn-limit" dir="ltr" inputmode="numeric" placeholder="∞" style="width:90px"></label>
+            <label>ينتهي في<br><input class="admin-select" id="cpn-ends" type="date" dir="ltr"></label>
+            <label>الوصف<br><input class="admin-select" id="cpn-label" maxlength="80" placeholder="خصم الصيف"></label>
+            <button class="admin-button" type="submit">إضافة</button>
+          </form>
+          <p class="admin-empty" id="coupon-error" style="padding:.4rem 0;color:var(--admin-bad,#c0392b)" hidden></p>
+        </article>
+        <article class="admin-card admin-card--wide">
+          <div class="admin-table-wrap"><table class="admin-table">
+            <thead><tr><th>الكود</th><th>الخصم</th><th>النطاق</th><th>الحد الأدنى</th><th>الانتهاء</th><th>الاستخدام</th><th>الحالة</th><th></th></tr></thead>
+            <tbody id="coupons-body"></tbody>
+          </table></div>
+          <p class="admin-empty" id="coupons-empty" hidden>لا توجد كوبونات بعد.</p>
+        </article>
+      </section>
+
+      <!-- الحملات -->
+      <section class="admin-panel" id="panel-campaigns">
+        <div class="admin-toolbar">
+          <div><h1>الحملات الإعلانية</h1><p>كل حملات البائعين المنشورة. تقدر توقف أي حملة مخالفة فتختفي من المتجر فوراً.</p></div>
+        </div>
+        <article class="admin-card admin-card--wide">
+          <div class="admin-table-wrap"><table class="admin-table">
+            <thead><tr><th>الحملة</th><th>المتجر</th><th>المكان</th><th>الفترة</th><th>ظهور</th><th>نقرات</th><th>التكلفة</th><th>الحالة</th><th></th></tr></thead>
+            <tbody id="campaigns-body"></tbody>
+          </table></div>
+          <p class="admin-empty" id="campaigns-empty" hidden>لا توجد حملات بعد.</p>
         </article>
       </section>
 

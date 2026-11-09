@@ -181,7 +181,7 @@
     drawn = true;
     const rec = recommended();
     const couponRows = Object.keys(window.Cart ? Cart.coupons : {}).map((code) =>
-      '<div class="mcoupon"><span><span class="mcoupon__code" dir="ltr">' + esc(code) + '</span><span class="mcoupon__desc">' + esc(Cart.coupons[code].label) + '</span></span>' +
+      '<div class="mcoupon"><span><a class="mcoupon__code" dir="ltr" href="/coupons/' + encodeURIComponent(code) + '">' + esc(code) + '</a><span class="mcoupon__desc">' + esc(Cart.coupons[code].label) + '</span></span>' +
       '<button type="button" data-code="' + esc(code) + '" aria-label="انسخ كود الخصم ' + esc(code) + '">' + icon('copy') + '</button></div>').join('');
     const seen = UI.recent.list();
 

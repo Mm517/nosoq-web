@@ -22,6 +22,14 @@
     seller: 'https://nosoq-seller.vercel.app',
     driver: 'https://nosoq-driver.vercel.app'
   };
+  /* تشغيل محلي (node dev-server.js): الروابط بين المنصات تروح على localhost بدل دومينات فيرسيل */
+  if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
+    LINKS = window.NASAQ_LINKS = {
+      main:   'http://localhost:3000',
+      seller: 'http://localhost:3001',
+      driver: 'http://localhost:3002'
+    };
+  }
   /* ================================= */
 
   window.NASAQ_PLATFORM = ME;

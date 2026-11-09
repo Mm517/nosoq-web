@@ -69,7 +69,7 @@
 
   /* ---------- Tabs ---------- */
   let ROLE = 'admin';
-  const TABS = ['orders', 'deliveries', 'support', 'applications', 'users', 'sellers', 'riders', 'products', 'financial', 'transactions'];
+  const TABS = ['orders', 'deliveries', 'support', 'applications', 'users', 'sellers', 'riders', 'products', 'financial', 'transactions', 'coupons', 'campaigns'];
   const loaders = {};
   const loaded = {};
   function activateTab(name) {
@@ -567,6 +567,126 @@
     renderTransactions(list || []);
   };
   $('#transaction-status-filter').addEventListener('change', () => { loaded.transactions = false; loaders.transactions().catch((e) => setNotice(e.message, true)); });
+
+  /* ===================== الكوبونات (جدول coupons) ===================== */
+  const CPN_TYPE = { percent: 'نسبة', fixed: 'مبلغ ثابت', shipping: 'شحن مجاني' };
+  let storeNames = {};
+  async function loadStoreNames() {
+    const r = await window.sb.from('stores').select('id,name').limit(1000);
+    storeNames = {}; ((r && r.data) || []).forEach((x) => { storeNames[x.id] = x.name; });
+  }
+  function cpnStatus(c) {
+    if (!c.active) return '<span class="admin-badge">متوقف</span>';
+    if (c.ends_at && new Date(c.ends_at) < new Date()) return '<span class="admin-badge">منتهي</span>';
+    if (c.usage_limit && c.used_count >= c.usage_limit) return '<span class="admin-badge">استُنفد</span>';
+    return '<span class="admin-badge admin-badge--ok">نشط</span>';
+  }
+  loaders.coupons = async function () {
+    skeletonRows('#coupons-body', 8);
+    if (!window.sb) throw new Error('تعذّر الاتصال بقاعدة البيانات.');
+    await loadStoreNames();
+    const r = await window.sb.from('coupons').select('*').order('created_at', { ascending: false }).limit(500);
+    if (r.error) {
+      $('#coupons-body').innerHTML = '';
+      throw new Error(/does not exist|schema cache/i.test(r.error.message) ? 'جدول الكوبونات غير موجود — شغّل database/coupons_campaigns.sql في Supabase.' : r.error.message);
+    }
+    const list = r.data || [];
+    $('#coupons-empty').hidden = list.length > 0;
+    $('#coupons-body').innerHTML = list.map((c) => '<tr>' +
+      '<td dir="ltr"><strong>' + esc(c.code) + '</strong></td>' +
+      '<td>' + (c.type === 'percent' ? Number(c.value) + '%' : c.type === 'fixed' ? formatMoney(c.value) : CPN_TYPE.shipping) + (c.max_discount ? ' <small>(حتى ' + formatMoney(c.max_discount) + ')</small>' : '') + '</td>' +
+      '<td>' + (c.store_id ? esc(storeNames[c.store_id] || 'متجر') : 'المنصة كلها') + '</td>' +
+      '<td>' + (Number(c.min_order) ? formatMoney(c.min_order) : '—') + '</td>' +
+      '<td>' + (c.ends_at ? formatDate(c.ends_at) : '—') + '</td>' +
+      '<td>' + c.used_count + (c.usage_limit ? ' / ' + c.usage_limit : '') + '</td>' +
+      '<td>' + cpnStatus(c) + '</td>' +
+      '<td class="admin-row-actions"><button class="admin-button admin-button--quiet" type="button" data-cpn-toggle="' + esc(c.id) + '" data-active="' + (c.active ? '1' : '0') + '">' + (c.active ? 'إيقاف' : 'تفعيل') + '</button> ' +
+      '<button class="admin-button admin-button--quiet" type="button" data-cpn-del="' + esc(c.id) + '">حذف</button></td></tr>').join('');
+  };
+  const reloadCoupons = () => { loaded.coupons = false; return loaders.coupons().catch((e) => setNotice(e.message, true)); };
+  $('#coupons-body').addEventListener('click', async (e) => {
+    const t = e.target.closest('[data-cpn-toggle]'), d = e.target.closest('[data-cpn-del]');
+    try {
+      if (t) {
+        const r = await window.sb.from('coupons').update({ active: t.dataset.active !== '1', updated_at: new Date().toISOString() }).eq('id', t.dataset.cpnToggle);
+        if (r.error) throw new Error(r.error.message);
+        await reloadCoupons();
+      } else if (d) {
+        if (!confirm('حذف الكوبون نهائياً؟')) return;
+        const r = await window.sb.from('coupons').delete().eq('id', d.dataset.cpnDel);
+        if (r.error) throw new Error(r.error.message);
+        await reloadCoupons();
+      }
+    } catch (err) { setNotice(err.message, true); }
+  });
+  $('#coupon-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const box = $('#coupon-error'), v = (id) => $('#' + id).value.trim();
+    const num = (x) => { const n = Number(x); return isFinite(n) ? n : NaN; };
+    const code = v('cpn-code').toUpperCase(), type = $('#cpn-type').value;
+    const value = type === 'shipping' ? 0 : num(v('cpn-value'));
+    const min = v('cpn-min') ? num(v('cpn-min')) : 0, max = v('cpn-max') ? num(v('cpn-max')) : null;
+    const limit = v('cpn-limit') ? parseInt(v('cpn-limit'), 10) : null;
+    const bad = !/^[A-Z0-9_-]{3,20}$/.test(code) ? 'الكود 3 إلى 20 حرف/رقم إنجليزي' :
+      type !== 'shipping' && !(value > 0) ? 'أدخل قيمة خصم صحيحة' : type === 'percent' && value > 100 ? 'النسبة لا تزيد عن 100' :
+      !(min >= 0) ? 'الحد الأدنى غير صحيح' : (max !== null && !(max > 0)) ? 'أقصى خصم غير صحيح' : (limit !== null && !(limit > 0)) ? 'عدد الاستخدامات غير صحيح' : '';
+    box.hidden = !bad; box.textContent = bad;
+    if (bad) return;
+    const label = v('cpn-label') || (type === 'percent' ? 'خصم ' + value + '%' : type === 'fixed' ? 'خصم ' + value + ' ج.م' : 'شحن مجاني');
+    const r = await window.sb.from('coupons').insert({
+      code, type, value, min_order: min, max_discount: type === 'percent' ? max : null, label, store_id: null,
+      ends_at: v('cpn-ends') ? new Date(v('cpn-ends') + 'T23:59:59').toISOString() : null, usage_limit: limit, active: true
+    });
+    if (r.error) { box.hidden = false; box.textContent = r.error.code === '23505' ? 'الكود ده موجود قبل كده.' : r.error.message; return; }
+    $('#coupon-form').reset();
+    await reloadCoupons();
+  });
+
+  /* ===================== الحملات (جدول campaigns) ===================== */
+  const AD_TYPE = { hero: 'لافتة الرئيسية', category: 'لافتة فئة', product: 'منتج مموَّل' };
+  function campStatus(c) {
+    if (c.paused) return '<span class="admin-badge">متوقفة</span>';
+    const today = new Date().toISOString().slice(0, 10);
+    const end = new Date(new Date(c.start_date).getTime() + (c.days - 1) * 864e5).toISOString().slice(0, 10);
+    if (today < c.start_date) return '<span class="admin-badge">مجدولة</span>';
+    if (today > end) return '<span class="admin-badge">منتهية</span>';
+    return '<span class="admin-badge admin-badge--ok">نشطة</span>';
+  }
+  loaders.campaigns = async function () {
+    skeletonRows('#campaigns-body', 9);
+    if (!window.sb) throw new Error('تعذّر الاتصال بقاعدة البيانات.');
+    await loadStoreNames();
+    const r = await window.sb.from('campaigns').select('*').order('created_at', { ascending: false }).limit(500);
+    if (r.error) {
+      $('#campaigns-body').innerHTML = '';
+      throw new Error(/does not exist|schema cache/i.test(r.error.message) ? 'جدول الحملات غير موجود — شغّل database/coupons_campaigns.sql في Supabase.' : r.error.message);
+    }
+    const list = r.data || [];
+    $('#campaigns-empty').hidden = list.length > 0;
+    $('#campaigns-body').innerHTML = list.map((c) => '<tr>' +
+      '<td>' + esc(c.title || c.name) + '<br><small>' + esc(c.name) + '</small></td>' +
+      '<td>' + esc(storeNames[c.store_id] || '—') + '</td>' +
+      '<td>' + esc(AD_TYPE[c.type] || c.type) + '</td>' +
+      '<td>' + formatDate(c.start_date) + ' · ' + c.days + ' يوم</td>' +
+      '<td>' + c.impressions + '</td><td>' + c.clicks + '</td>' +
+      '<td>' + formatMoney(c.total) + '</td><td>' + campStatus(c) + '</td>' +
+      '<td class="admin-row-actions"><button class="admin-button admin-button--quiet" type="button" data-camp-toggle="' + esc(c.id) + '" data-paused="' + (c.paused ? '1' : '0') + '">' + (c.paused ? 'تشغيل' : 'إيقاف') + '</button> ' +
+      '<button class="admin-button admin-button--quiet" type="button" data-camp-del="' + esc(c.id) + '">حذف</button></td></tr>').join('');
+  };
+  $('#campaigns-body').addEventListener('click', async (e) => {
+    const t = e.target.closest('[data-camp-toggle]'), d = e.target.closest('[data-camp-del]');
+    try {
+      if (t) {
+        const r = await window.sb.rpc('admin_set_campaign_paused', { p_id: t.dataset.campToggle, p_paused: t.dataset.paused !== '1' });
+        if (r.error) throw new Error(r.error.message);
+      } else if (d) {
+        if (!confirm('حذف الحملة نهائياً؟ (هتفضل في لوحة البائع لحد ما يحذفها بنفسه)')) return;
+        const r = await window.sb.from('campaigns').delete().eq('id', d.dataset.campDel);
+        if (r.error) throw new Error(r.error.message);
+      } else return;
+      loaded.campaigns = false; await loaders.campaigns();
+    } catch (err) { setNotice(err.message, true); }
+  });
 
   /* ===================== الدعم (شات) ===================== */
   /* الكود بيحدّد صاحب المحادثة: SL- بائع | RD- سائق | US- مستخدم | GS- زائر */

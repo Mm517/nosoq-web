@@ -53,7 +53,7 @@
     const adCards = window.Market ? window.Market.ads.active('hero').map((c) => { window.Market.ads.impression(c.id); return UI.adSlide(c); }) : [];
     const cards = [brand].concat(adCards);
     if (newest.length) cards.push(slide({ tone: 'soft', title: 'وصل حديثاً', text: 'قطع جديدة هذا الأسبوع بخامات وتصاميم هادئة.', cta: 'تسوّق الجديد', href: '/shop?sort=new', products: newest, btn: 'btn--primary' }));
-    if (discounted.length) cards.push(slide({ tone: 'ink', title: 'عروض لفترة محدودة', text: 'خصم حتى ' + maxDiscount + '% على قطع مختارة.', cta: 'شاهد العروض', href: '/shop?sale=1', products: discounted }));
+    if (discounted.length) cards.push(slide({ tone: 'ink', title: 'عروض لفترة محدودة', text: 'خصم حتى ' + maxDiscount + '% على قطع مختارة.', cta: 'شاهد العروض', href: '/daily-offers', products: discounted }));
     if (ofCat('bags').length) cards.push(slide({ tone: 'mid', title: 'حقائب ومحافظ جلد', text: 'جلد طبيعي يزداد جمالاً مع الاستخدام.', cta: 'تسوّق الحقائب', href: '/shop?cat=bags', products: ofCat('bags'), btn: 'btn--primary' }));
     if (ofCat('accessories').length) cards.push(slide({ tone: 'plain', title: 'إكسسوارات تكمل إطلالتك', text: 'ساعات ونظارات وأوشحة بلمسة بسيطة.', cta: 'تسوّق الإكسسوارات', href: '/shop?cat=accessories', products: ofCat('accessories'), btn: 'btn--primary' }));
     if (ofCat('clothes').length) cards.push(slide({ tone: 'deep', title: 'ملابس لكل يوم', text: 'هودي وجاكيت وتيشيرتات بقصّات مريحة.', cta: 'تسوّق الملابس', href: '/shop?cat=clothes', products: ofCat('clothes') }));
@@ -85,21 +85,21 @@
       id: 'tc-cats', title: 'تسوّق حسب الفئة', href: '/shop',
       tiles: catTiles.map(({ c, list }) => {
         const cover = list.find(inStock) || list[0];
-        return UI.tile({ href: '/shop?cat=' + c.id, img: img(cover), label: esc(c.name), sub: count(list.length) });
+        return UI.tile({ href: '/categories/' + c.id, img: img(cover), label: esc(c.name), sub: count(list.length) });
       })
     }));
   }
 
   if (discounted.length) {
     const dealTones = ['', 'deep', 'mid', 'ink'];
-    const tiles = [UI.tile({ href: '/shop?sale=1', big: 'حتى ' + maxDiscount + '%', small: 'خصم', label: 'كل العروض', tone: dealTones[0] })];
+    const tiles = [UI.tile({ href: '/daily-offers', big: 'حتى ' + maxDiscount + '%', small: 'خصم', label: 'كل العروض', tone: dealTones[0] })];
     Products.categories.forEach((c) => {
       const d = discounted.filter((p) => p.category === c.id);
       if (d.length && tiles.length < 4) {
         tiles.push(UI.tile({ href: '/shop?cat=' + c.id + '&sale=1', big: 'حتى ' + pctOf(d[0]) + '%', small: 'خصم', label: esc(c.name), tone: dealTones[tiles.length] }));
       }
     });
-    row1.push(UI.tileCard({ id: 'tc-deals', title: 'خصومات حسب الفئة', href: '/shop?sale=1', tiles: tiles }));
+    row1.push(UI.tileCard({ id: 'tc-deals', title: 'خصومات حسب الفئة', href: '/daily-offers', tiles: tiles }));
   }
 
   row1.push(UI.tileCard({
@@ -150,10 +150,10 @@
   }
 
   const couponRows = Object.keys(Cart.coupons).map((code) =>
-    '<div class="coupon-row"><span><span class="coupon-row__code" dir="ltr">' + esc(code) + '</span><span class="coupon-row__desc">' + esc(Cart.coupons[code].label) + '</span></span>' +
+    '<div class="coupon-row"><span><a class="coupon-row__code" dir="ltr" href="/coupons/' + encodeURIComponent(code) + '">' + esc(code) + '</a><span class="coupon-row__desc">' + esc(Cart.coupons[code].label) + '</span></span>' +
     '<button type="button" class="coupon-row__copy" data-code="' + esc(code) + '" aria-label="انسخ كود الخصم ' + esc(code) + '">' + UI.icon('copy') + '</button></div>').join('');
   row2.push(UI.tileCard({
-    id: 'coupons', cls: 'tcard--ink tcard--wide', title: 'أكواد الخصم',
+    id: 'coupons', cls: 'tcard--ink tcard--wide', title: 'أكواد الخصم', href: '/coupons',
     body: '<p>انسخ الكود واستخدمه عند إتمام الطلب. أكواد الخصم تُطبَّق فوق أسعار العروض.</p><div class="coupon-list">' + couponRows + '</div>'
   }));
   const t2 = $('tiles-2');
@@ -186,7 +186,7 @@
   if (dealsRoot && discounted.length) {
     UI.load(dealsRoot, {
       count: 4, skeleton: railSkeleton(4),
-      render: () => UI.carousel({ id: 'car-deals', title: 'عروض لفترة محدودة', href: '/shop?sale=1', more: 'عرض الكل', items: discounted.map(UI.pcard) })
+      render: () => UI.carousel({ id: 'car-deals', title: 'عروض لفترة محدودة', href: '/daily-offers', more: 'عرض الكل', items: discounted.map(UI.pcard) })
     }).then(() => UI.initCarousels(dealsRoot));
   }
   const recentRoot = $('recent-root');

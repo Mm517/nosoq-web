@@ -614,7 +614,7 @@
   }
 
   /* ---------- الشريط السفلي (موبايل): الرئيسية · حسابي · السلة · القائمة ---------- */
-  const TAB_PAGES = ['home', 'shop', 'product', 'store', 'cart', 'profile'];
+  const TAB_PAGES = ['home', 'shop', 'product', 'store', 'collection', 'cart', 'profile'];
   function hasTabbar() { return TAB_PAGES.indexOf(document.body.dataset.page || '') > -1; }
   function buildTabbar() {
     const page = document.body.dataset.page || '';
@@ -639,8 +639,9 @@
     const shop = page === 'shop';
     const bare = !P.get('cat') && !P.get('sale') && !P.get('q') && !P.get('wishlist') && P.get('sort') !== 'new';
     const links = [
-      { label: 'عروض اليوم', href: '/shop?sale=1', on: shop && P.get('sale') === '1' && !P.get('cat') },
-      { label: 'الكوبونات', href: '/#coupons', on: false },
+      { label: 'عروض اليوم', href: '/daily-offers', on: page === 'collection' && location.pathname.indexOf('/daily-offers') === 0 },
+      { label: 'الأكثر مبيعاً', href: '/bestsellers', on: page === 'collection' && location.pathname.indexOf('/bestsellers') === 0 },
+      { label: 'الكوبونات', href: '/coupons', on: page === 'collection' && location.pathname.indexOf('/coupons') === 0 },
       { label: 'وصل حديثاً', href: '/shop?sort=new', on: shop && P.get('sort') === 'new' && !P.get('cat') },
       { label: 'كل المنتجات', href: '/shop', on: shop && bare }
     ].concat(Products.categories.map((c) => ({ label: c.name, href: '/shop?cat=' + c.id, on: shop && P.get('cat') === c.id })))
@@ -681,8 +682,8 @@
         '<button type="button" class="icon-btn" data-panel-close aria-label="إغلاق القائمة">' + icon('close') + '</button></div>' +
       '<div class="sidenav__body">' +
         '<button type="button" class="sidenav__loc" data-loc-open>' + icon('pin') + '<span>التوصيل إلى <strong data-loc-label>' + esc(loc.get() || 'تحديث الموقع') + '</strong></span></button>' +
-        '<h3>تسوّق حسب الفئة</h3><ul>' + Products.categories.map((c) => li('/shop?cat=' + c.id, c.name)).join('') + li('/shop', 'كل المنتجات') + '</ul>' +
-        '<h3>عروض ومزايا</h3><ul>' + li('/shop?sale=1', 'عروض اليوم') + li('/#coupons', 'الكوبونات وأكواد الخصم') + li('/shop?sort=new', 'وصل حديثاً') + li('/shop?sort=rating', 'الأعلى تقييماً') + '</ul>' +
+        '<h3>تسوّق حسب الفئة</h3><ul>' + Products.categories.map((c) => li('/categories/' + c.id, c.name)).join('') + li('/categories', 'كل الأقسام') + li('/shop', 'كل المنتجات') + '</ul>' +
+        '<h3>عروض ومزايا</h3><ul>' + li('/daily-offers', 'عروض اليوم') + li('/bestsellers', 'الأكثر مبيعاً') + li('/coupons', 'الكوبونات وأكواد الخصم') + li('/campaigns', 'الحملات') + li('/shop?sort=new', 'وصل حديثاً') + li('/shop?sort=rating', 'الأعلى تقييماً') + '</ul>' +
          '<h3>حسابك</h3><ul>' + li(account ? '/profile' : '/auth', account ? 'الملف الشخصي والطلبات' : 'تسجيل الدخول') + li('/shop?wishlist=1', 'المفضلة') + li('/cart', 'سلة التسوق') + '</ul>' +
          '<h3>' + (account ? 'مساحتك' : 'انضم إلينا') + '</h3><ul>' + roleItems + '</ul>' +
       '</div></aside>';

@@ -31,9 +31,79 @@
   }
   const ls = {
     get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (_) { return d; } },
-    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); pushSellerData(k); return true; } catch (_) { return false; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); pushSellerData(k); if (k === K.ads) pushCampaigns(); return true; } catch (_) { return false; } },
     del(k) { try { localStorage.removeItem(k); } catch (_) { /* تجاهل */ } }
   };
+
+  /* ---------- الحملات العامة (جدول campaigns في Supabase) ----------
+     • لوحة البائع (NASAQ_PLATFORM = 'seller'): القائمة الأصلية محلية + seller_data، وكل تعديل بيترفع
+       لجدول campaigns عبر seller_campaigns_sync (وبنرفع صور الحملة لـ Storage بدل data: URL).
+     • المتجر/أي زائر: بيقرأ الحملات النشطة من view اسمه public_campaigns (من غير تسجيل دخول). */
+  const KEY = () => window.NASAQ_SUPABASE_ANON_KEY, SB = () => window.NASAQ_SUPABASE_URL;
+  const useLocalAds = () => window.NASAQ_PLATFORM === 'seller';
+
+  function rpcPublic(fn, body) {
+    try {
+      fetch(SB() + '/rest/v1/rpc/' + fn, {
+        method: 'POST', keepalive: true,
+        headers: { 'Content-Type': 'application/json', apikey: KEY(), Authorization: 'Bearer ' + KEY() },
+        body: JSON.stringify(body)
+      }).catch(() => { /* تجاهل */ });
+    } catch (_) { /* تجاهل */ }
+  }
+
+  let pubCamps = null, pubCampsAt = 0;
+  function loadPublicCampaigns() {
+    if (pubCamps && Date.now() - pubCampsAt < 60000) return pubCamps;
+    pubCampsAt = Date.now();
+    try {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', SB() + '/rest/v1/public_campaigns?select=*&order=start_date.desc&limit=200', false);
+      xhr.setRequestHeader('apikey', KEY());
+      xhr.setRequestHeader('Authorization', 'Bearer ' + KEY());
+      xhr.send(null);
+      if (xhr.status >= 200 && xhr.status < 300) {
+        pubCamps = (JSON.parse(xhr.responseText || '[]') || []).map((r) => ({
+          id: r.id, sellerId: r.store_id, storeSlug: r.store_slug, storeName: r.store_name, type: r.type,
+          name: r.name, title: r.title, text: r.text, cta: r.cta, img: r.img, href: r.href,
+          productId: r.product_legacy_id == null ? '' : r.product_legacy_id, category: r.category,
+          start: r.start_date, days: r.days, paused: false, impressions: 0, clicks: 0, remote: true
+        }));
+      } else {
+        console.warn('[nasaq] تعذّر تحميل الحملات (شغّل database/coupons_campaigns.sql؟):', xhr.status);
+        pubCamps = pubCamps || [];
+      }
+    } catch (err) {
+      console.warn('[nasaq] تعذّر الاتصال لتحميل الحملات:', err);
+      pubCamps = pubCamps || [];
+    }
+    return pubCamps;
+  }
+
+  let campTimer = null, campBusy = false;
+  function pushCampaigns() {
+    const s = (ls.get(K.seller, null)) || {};
+    if (!s.cloudId || !cloud() || !cloud().request) return;
+    clearTimeout(campTimer);
+    campTimer = setTimeout(async () => {
+      if (campBusy) { pushCampaigns(); return; }
+      campBusy = true;
+      try {
+        const list = ls.get(K.ads, []);
+        let dirty = false;
+        for (const c of list) {
+          if (c.img && /^data:image\//.test(c.img) && cloud().uploadImage) {
+            const url = await cloud().uploadImage(c.img, 'campaign-' + c.id);
+            if (url && !/^data:/.test(url)) { c.img = url; dirty = true; }
+          }
+        }
+        if (dirty) { try { localStorage.setItem(K.ads, JSON.stringify(list)); } catch (_) { /* تجاهل */ } pushSellerData(K.ads); }
+        await cloud().request('/seller/campaigns', { list }, 'PUT');
+      } catch (err) {
+        window.dispatchEvent(new CustomEvent('nasaq:cloud-error', { detail: 'تعذّر نشر الحملة للزوار: ' + ((err && err.message) || '') }));
+      } finally { campBusy = false; }
+    }, 800);
+  }
 
   /* ---------- أدوات ---------- */
   const pad = (n) => String(n).padStart(2, '0');
@@ -112,7 +182,24 @@
         } catch (_) { /* تجاهل */ }
       });
       if (changed) window.dispatchEvent(new CustomEvent('nasaq:seller-data-ready'));
+      mergeCampaignCounters();
+      pushCampaigns();   /* حملات قديمة كانت محلية فقط → تتنشر مرة واحدة */
     }).catch(() => { sellerDataLoaded = false; });
+  }
+
+  /* أرقام المشاهدات والنقرات الحقيقية من الزوار (campaign_track) → تظهر في لوحة البائع */
+  function mergeCampaignCounters() {
+    if (!window.sb) return;
+    window.sb.from('campaigns').select('id,impressions,clicks').then((r) => {
+      if (!r || r.error || !Array.isArray(r.data) || !r.data.length) return;
+      const list = ls.get(K.ads, []); let ch = false;
+      r.data.forEach((row) => {
+        const c = list.find((x) => x.id === row.id); if (!c) return;
+        if (row.impressions > (c.impressions || 0)) { c.impressions = row.impressions; ch = true; }
+        if (row.clicks > (c.clicks || 0)) { c.clicks = row.clicks; ch = true; }
+      });
+      if (ch) { try { localStorage.setItem(K.ads, JSON.stringify(list)); } catch (_) { /* تجاهل */ } window.dispatchEvent(new CustomEvent('nasaq:seller-data-ready')); }
+    });
   }
 
   /* ---------- إحصائيات المشاهدة/السلة الحقيقية (product_daily_stats) ---------- */
@@ -528,7 +615,7 @@
       const subtotal = pl.perDay * days, off = rule ? rule.off : 0;
       return { perDay: pl.perDay, days, subtotal, off, discount: round2(subtotal * off), total: round2(subtotal * (1 - off)) };
     },
-    list: () => ls.get(K.ads, []),
+    list: () => (useLocalAds() ? ls.get(K.ads, []) : loadPublicCampaigns()),
     get: (id) => ads.list().find((c) => c.id === id),
     endOf: (c) => dkey(addDays(parseKey(c.start), c.days - 1)),
     statusOf(c) {
@@ -558,10 +645,18 @@
     sponsoredIds() { return new Set(ads.active('product').map((c) => Number(c.productId))); },
     isSponsored(pid) { return ads.sponsoredIds().has(Number(pid)); },
     _seen: new Set(),
-    impression(id) { if (ads._seen.has(id)) return; ads._seen.add(id); const l = ads.list(), c = l.find((x) => x.id === id); if (c) { c.impressions++; ls.set(K.ads, l); } },
-    click(id) { const l = ads.list(), c = l.find((x) => x.id === id); if (c) { c.clicks++; ls.set(K.ads, l); } },
+    impression(id) {
+      if (ads._seen.has(id)) return; ads._seen.add(id);
+      if (!useLocalAds()) { rpcPublic('campaign_track', { p_id: id, p_kind: 'impression' }); return; }
+      const l = ads.list(), c = l.find((x) => x.id === id); if (c) { c.impressions++; ls.set(K.ads, l); }
+    },
+    click(id) {
+      if (!useLocalAds()) { rpcPublic('campaign_track', { p_id: id, p_kind: 'click' }); return; }
+      const l = ads.list(), c = l.find((x) => x.id === id); if (c) { c.clicks++; ls.set(K.ads, l); }
+    },
     /* تنبيه بانتهاء الحملات (مرة واحدة لكل حملة) */
     sweep() {
+      if (!useLocalAds()) return;
       const l = ads.list(); let ch = false;
       l.forEach((c) => { if (!c.endNotified && ads.statusOf(c) === 'ended') { c.endNotified = true; ch = true; notifs.add({ type: 'ad', title: 'انتهت حملتك', text: c.name, href: '#/ads' }); } });
       if (ch) ls.set(K.ads, l);

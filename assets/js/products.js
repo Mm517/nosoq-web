@@ -564,6 +564,29 @@
     return hit;
   }
 
+  /* ---------- روابط حسب السياق ----------
+     /bestsellers/<المتجر>/<المنتج>   ·   /daily-offers/<المتجر>/<المنتج>
+     /categories/<القسم>/<المتجر>/<المنتج>      (القسم = id القسم مثل clothes)
+     نفس المنتج ونفس الصفحة، بس الرابط بيعكس المكان اللي دخل منه العميل. */
+  const CTX_KINDS = ['bestsellers', 'daily-offers', 'categories'];
+  function ctxUrl(kind, p) {
+    const x = pathIndex().byId.get(p.id);
+    if (!x) return '/shop';
+    if (kind === 'bestsellers' || kind === 'daily-offers') return '/' + kind + '/' + enc(x.market) + '/' + enc(x.name);
+    if (kind === 'categories') return '/categories/' + enc(p.category) + '/' + enc(x.market) + '/' + enc(x.name);
+    return productUrl(p);
+  }
+  /* المتاجر الموجودة في قائمة منتجات: [{ slug, name, count }] */
+  function storesOf(list) {
+    const m = new Map();
+    list.forEach((p) => {
+      const slug = marketSlugOf(p);
+      const e = m.get(slug) || { slug, name: (p.seller && p.seller.name) || STORE.name, count: 0 };
+      e.count++; m.set(slug, e);
+    });
+    return Array.from(m.values());
+  }
+
   /* ---------- الترجمة: أسماء وأوصاف المنتجات (من الداتابيس) + أسماء الأقسام ---------- */
   function i18nRegister(map, opts) {
     const q = window.NASAQ_I18N_PENDING = window.NASAQ_I18N_PENDING || [];
@@ -683,7 +706,7 @@
     radiusKm: BUYER_RADIUS_KM,
     all: () => PRODUCTS.slice(),
     byId: (id) => PRODUCTS.find((p) => p.id === Number(id)),
-    slugify, url: productUrl, campaignUrl, byPath, bySlug,
+    slugify, url: productUrl, campaignUrl, ctxUrl, ctxKinds: CTX_KINDS, storeSlug: marketSlugOf, storesOf, byPath, bySlug,
     categoryName: (id) => (CATEGORIES.find((c) => c.id === id) || {}).name || '',
     subs: (id) => (CATEGORIES.find((c) => c.id === id) || {}).subs || [],
     subName: (id) => (SUB_INDEX[id] || {}).name || '',
@@ -696,6 +719,9 @@
     gallery, photoURL, photoCount, imgAttrs, setImg, artFor,
     normalize,
     isBestSeller: (p) => bestIds.has(p.id),
+    bestSellers: () => PRODUCTS.filter((p) => bestIds.has(p.id)),
+    dailyOffers: () => PRODUCTS.filter((p) => p.stock > 0 && p.oldPrice && p.oldPrice > p.price).sort((a, b) => (b.oldPrice - b.price) / b.oldPrice - (a.oldPrice - a.price) / a.oldPrice),
+    categoryById: (id) => CATEGORIES.find((c) => c.id === id) || null,
     sellerOf: (p) => p.seller || { id: 'official', name: STORE.name, slug: '' },
     delivery, shipNote, msToMidnight, clock,
     related(p, n) {
