@@ -319,3 +319,10 @@
 /* ---------- تصفية الأقسام الفرعية (تظهر تحت القسم المختار) ---------- */
 .filter-subs { display: grid; gap: 2px; margin: 2px 0 6px; padding-inline-start: var(--sp-4); border-inline-start: 2px solid var(--c-line); }
 .filter-opt--sub { padding-block: 0.35rem; font-size: var(--fs-sm); }
+
+/* زرار المشاركة (nasaq-share.js) */
+.share-btn { display: inline-grid; place-items: center; gap: 0.35rem; cursor: pointer; color: var(--c-ink); }
+.pdp__buy .share-btn { width: 54px; height: 54px; border: 1.5px solid var(--c-line-strong); border-radius: 50%; background: var(--c-white); flex: none; }
+.pdp__buy .share-btn:hover { background: var(--c-surface); }
+.storehead .share-btn { grid-auto-flow: column; margin-inline-start: auto; padding: 0.55rem 1.1rem; border: 1.5px solid var(--c-line-strong); border-radius: 999px; background: var(--c-white); font-size: var(--fs-sm); }
+.storehead .share-btn:hover { background: var(--c-surface); }

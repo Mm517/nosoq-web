@@ -69,6 +69,7 @@
         '<p class="storehead__meta">' + (a.city ? UI.icon('pin') + esc([a.area, a.city].filter(Boolean).join('، ')) + ' · ' : '') + list.length + ' منتج · الإرجاع خلال 14 يوماً' +
           (distText ? ' · يبعد عنك ' + distText : '') + '</p>' +
         (s.description ? '<p class="storehead__desc">' + esc(s.description) + '</p>' : '') + '</div>' +
+    (window.NasaqShare ? window.NasaqShare.button({ kind: 'store', id: s.id, title: s.name, label: 'شارك المتجر' }) : '') +
     '</section>' +
     (list.length ? '<div class="grid grid--4">' + UI.cards(list) + '</div>'
       : UI.emptyHTML({ icon: 'box', title: 'لا توجد منتجات منشورة بعد', text: 'سيظهر هنا كل ما ينشره هذا المتجر.', actions: [{ label: 'تصفّح كل المنتجات', href: '/shop', primary: true }] }));

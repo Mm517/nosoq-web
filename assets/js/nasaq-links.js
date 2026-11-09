@@ -18,7 +18,7 @@
   /* ======== إعدادات المشروع ======== */
   var ME = 'main';   /* ← 'main' | 'seller' | 'driver' (بيتغيّر لكل مشروع) */
   var LINKS = window.NASAQ_LINKS = {
-    main:   'https://nosoq.vercel.app',          /* ← غيّره لدومين المتجر الفعلي */
+    main:   'https://nosoq-shop.vercel.app',          /* ← غيّره لدومين المتجر الفعلي */
     seller: 'https://nosoq-seller.vercel.app',
     driver: 'https://nosoq-driver.vercel.app'
   };

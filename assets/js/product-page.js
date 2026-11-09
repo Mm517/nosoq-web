@@ -200,6 +200,7 @@
             '</div>' +
             '<button type="button" class="btn btn--primary btn--lg" id="add-btn"' + (out ? ' disabled' : '') + '>' + (out ? 'نفدت الكمية' : UI.icon('bag') + 'أضف إلى السلة') + '</button>' +
             UI.wishBtn(p, 'wish-btn') +
+            (window.NasaqShare && p.uuid ? window.NasaqShare.button({ kind: 'product', id: p.uuid, title: p.name }) : '') +
           '</div>' +
           stockNote +
           '<ul class="trust">' +
