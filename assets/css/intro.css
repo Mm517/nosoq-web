@@ -1,0 +1,189 @@
+/* ==========================================================================
+   css/intro.css — Intro Animation (شاشة افتتاح نَسَق)
+   يعتمد بالكامل على المتغيرات في tokens.css (بدون أي ألوان/خطوط جديدة).
+   حركة خفيفة: opacity / transform / stroke-dashoffset فقط.
+   ========================================================================== */
+
+html.ni-lock,
+html.ni-lock body { overflow: hidden; height: 100%; }
+
+.ni {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: grid;
+  place-items: center;
+  background: var(--c-bg);
+  overflow: hidden;
+  cursor: pointer;
+}
+.ni * { box-sizing: border-box; }
+
+/* خلفية متوافقة مع الهوية */
+.ni__bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background:
+    radial-gradient(60% 55% at 50% 42%, var(--c-accent-soft) 0%, transparent 70%),
+    var(--c-bg);
+  animation: niBgIn .6s var(--ease) forwards;
+}
+
+.ni__skip {
+  position: absolute;
+  top: max(18px, env(safe-area-inset-top, 0px));
+  inset-inline-end: 18px;
+  z-index: 3;
+  border: none;
+  background: transparent;
+  color: var(--c-ink);
+  opacity: .45;
+  font-family: var(--font-sans);
+  font-size: .82rem;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: opacity .2s var(--ease);
+}
+.ni__skip:hover { opacity: .85; }
+
+.ni__stage {
+  position: relative;
+  z-index: 2;
+  width: min(560px, 86vw);
+  display: grid;
+  place-items: center;
+}
+
+/* ---------- الخط والأيقونات ---------- */
+.ni__line-wrap { position: relative; width: 100%; height: clamp(64px, 14vw, 96px); }
+.ni__line { width: 100%; height: 100%; overflow: visible; }
+.ni__line path {
+  fill: none;
+  stroke: url(#niLineGrad);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: niLineDraw 1.1s var(--ease) .35s forwards;
+}
+
+.ni__icons { position: absolute; inset: 0; }
+
+.ni__icon {
+  position: absolute;
+  top: 50%;
+  width: clamp(38px, 9vw, 50px);
+  height: clamp(38px, 9vw, 50px);
+  transform: translate(-50%, -50%) scale(.4);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--c-white);
+  border: 1.5px solid var(--c-line);
+  color: var(--c-accent);
+  opacity: 0;
+  box-shadow: 0 0 0 0 rgba(47, 69, 212, 0);
+  animation: niIconPop .5s var(--ease) forwards;
+}
+.ni__icon svg { width: 55%; height: 55%; }
+
+.ni__icon--buyer  { inset-inline-end: 82%; animation-delay: .52s; }
+.ni__icon--seller { inset-inline-end: 50%; animation-delay: .92s; }
+.ni__icon--driver { inset-inline-end: 18%; animation-delay: 1.32s; }
+
+.ni__label {
+  position: absolute;
+  top: calc(50% + clamp(26px, 6vw, 34px));
+  inset-inline-end: 50%;
+  transform: translateX(-50%);
+  font-size: .72rem;
+  color: var(--c-ink);
+  white-space: nowrap;
+  opacity: 0;
+  animation: niFadeUp .4s var(--ease) forwards;
+}
+.ni__icon--buyer  + .ni__label { inset-inline-end: 82%; animation-delay: .62s; }
+.ni__icon--seller + .ni__label { inset-inline-end: 50%; animation-delay: 1.02s; }
+.ni__icon--driver + .ni__label { inset-inline-end: 18%; animation-delay: 1.42s; }
+
+/* ---------- مرحلة التجمّع: الأيقونات تتجمع وتختفي، والخط يتحوّل لدايرة عبر JS ---------- */
+.ni.is-converge .ni__icon,
+.ni.is-converge .ni__label { animation: niConverge .6s var(--ease) forwards; }
+
+.ni__word {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 9vw, 3.6rem);
+  color: var(--c-ink);
+  letter-spacing: -0.02em;
+  opacity: 0;
+  transform: scale(.15);
+}
+.ni.is-word .ni__word { animation: niWordIn .55s var(--ease) forwards; }
+.ni.is-logo .ni__word { animation: niWordSettle .4s var(--ease) forwards; }
+
+/* الدايرة (الخط بعد ما اتلف) تتلاشى لحظة اكتمال الشعار — "تطلق" الكلمة منها */
+.ni.is-logo .ni__line path { animation: niLineFade .45s var(--ease) forwards; }
+
+.ni__dot {
+  width: .5rem; height: .5rem;
+  margin-top: .55rem;
+  border-radius: 50%;
+  background: var(--c-accent);
+  opacity: 0;
+  transform: scale(0);
+}
+.ni.is-logo .ni__dot { animation: niDotPop .35s var(--ease) forwards; }
+
+/* ---------- خروج الشاشة ---------- */
+.ni.is-out { animation: niOverlayOut .5s ease forwards; pointer-events: none; }
+
+/* ---------- Keyframes ---------- */
+@keyframes niBgIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes niLineDraw { to { stroke-dashoffset: 0; } }
+@keyframes niLineFade { to { opacity: 0; } }
+
+@keyframes niIconPop {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(.4); box-shadow: 0 0 0 0 rgba(47,69,212,0); }
+  55%  { opacity: 1; transform: translate(-50%, -55%) scale(1.15); box-shadow: 0 0 0 8px rgba(47,69,212,.12); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 0 rgba(47,69,212,0); }
+}
+
+@keyframes niFadeUp {
+  from { opacity: 0; transform: translate(-50%, 6px); }
+  to   { opacity: .55; transform: translate(-50%, 0); }
+}
+
+@keyframes niConverge {
+  to { opacity: 0; transform: translate(calc(-50% + var(--ni-dx, 0px)), -60%) scale(.15); }
+}
+
+@keyframes niWordIn { to { opacity: 1; transform: scale(1); } }
+
+@keyframes niWordSettle {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+@keyframes niDotPop {
+  0%   { opacity: 0; transform: scale(0); }
+  60%  { opacity: 1; transform: scale(1.3); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes niOverlayOut { to { opacity: 0; visibility: hidden; } }
+
+@media (max-width: 480px) { .ni__line-wrap { height: 60px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ni, .ni * { animation-duration: .01ms !important; animation-delay: .01ms !important; }
+}

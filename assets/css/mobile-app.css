@@ -1,0 +1,130 @@
+/* ==========================================================================
+   css/mobile-app.css — شكل التطبيق على الموبايل فقط (أقل من 768px)
+   1) شريط تنقل سفلي ثابت (الرئيسية · حسابي · السلة · القائمة)
+   2) سكيلتون (هياكل تحميل متحركة) لكل شاشة: الهيدر، الأقسام، البطاقات، الصور…
+   شاشة الكمبيوتر لا تتأثر إطلاقاً.
+   ========================================================================== */
+
+.tabbar, .sk-tabbar, .sk-screen, .sk-hdr, .sk-subnav { display: none; }
+
+@media (max-width: 767px) {
+  :root { --tabbar-h: 62px; }
+
+  /* ---------- 1) الشريط السفلي ---------- */
+  body.has-tabbar { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px)); }
+  .tabbar, .sk-tabbar {
+    display: grid; grid-template-columns: repeat(4, 1fr); align-items: stretch;
+    position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 45;
+    height: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px)); padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--c-bg); border-top: 1px solid var(--c-line);
+    box-shadow: 0 -4px 18px color-mix(in srgb, var(--c-ink) 7%, transparent);
+  }
+  .tabbar__item {
+    position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    color: var(--c-ink-3); font-size: 11px; font-weight: 600; line-height: 1; -webkit-tap-highlight-color: transparent;
+    background: none; border: 0; padding: 0; cursor: pointer;
+  }
+  .tabbar__ico { position: relative; display: grid; place-items: center; width: 34px; height: 30px; transition: transform var(--dur-2, .2s) var(--ease, ease); }
+  .tabbar__ico .icon { width: 1.65rem; height: 1.65rem; }
+  .tabbar__item:active .tabbar__ico { transform: scale(0.88); }
+  .tabbar__item.is-on { color: var(--c-accent); }
+  /* مؤشر النشاط: خط قصير أعلى الأيقونة المفعّلة */
+  .tabbar__item.is-on::before {
+    content: ""; position: absolute; inset-block-start: -1px; width: 30px; height: 3px; border-radius: 0 0 3px 3px; background: var(--c-accent);
+  }
+  .tabbar .count-badge { inset-block-start: -3px; inset-inline-end: -4px; }
+
+  /* الأزرار المنقولة للشريط السفلي تختفي من الهيدر */
+  body.has-tabbar .header__menu-btn,
+  body.has-tabbar .header-actions .acct,
+  body.has-tabbar .header-actions .cart-btn { display: none; }
+  body.has-tabbar .header-bar { grid-template-areas: "logo . actions" "search search search"; grid-template-columns: auto minmax(0, 1fr) auto; }
+
+  /* الإشعارات فوق الشريط السفلي */
+  body.has-tabbar .toasts { inset-block-end: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 0.75rem); }
+
+  /* ---------- 2) السكيلتون ---------- */
+  html.sk-on .sk-screen { display: block; padding-block: var(--sp-3) var(--sp-6); min-height: 70vh; }
+  html.sk-on .sk-hdr { display: block; }
+  html.sk-on .sk-subnav { display: flex; }
+  html.sk-on main > *:not(.sk-screen) { display: none !important; }
+  html.sk-on .site-header:empty, html.sk-on .site-footer:empty, html.sk-on .site-footer { display: none; }
+  html.sk-on .subnav, html.sk-on .suggest-strip, html.sk-on .tabbar { display: none !important; }
+  html.sk-on body { overflow-x: hidden; }
+  html.sk-on body.has-tabbar { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px)); }
+  html.sk-out .sk-screen, html.sk-out .sk-hdr, html.sk-out .sk-subnav, html.sk-out .sk-tabbar { opacity: 0; transition: opacity .22s ease; }
+
+  /* اللمعة تتحرك بـ transform (تشتغل حتى لو الصفحة مشغولة بتحميل بيانات) */
+  .sk { position: relative; overflow: hidden; display: block; background: var(--c-surface-2, #e9ebef); border-radius: var(--r-sm); }
+  .sk::after {
+    content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--c-bg) 75%, transparent), transparent);
+    animation: sk-sweep 1.35s ease-in-out infinite;
+  }
+  [dir="rtl"] .sk::after { transform: translateX(100%); animation-name: sk-sweep-rtl; }
+  @keyframes sk-sweep { to { transform: translateX(100%); } }
+  @keyframes sk-sweep-rtl { to { transform: translateX(-100%); } }
+
+  .sk-wrap { padding-inline: var(--gutter); }
+  .sk-line { height: 12px; border-radius: 6px; }
+  .sk-line.h16 { height: 16px; } .sk-line.h20 { height: 20px; } .sk-line.h28 { height: 28px; border-radius: 8px; }
+  .w30 { width: 30%; } .w40 { width: 40%; } .w50 { width: 50%; } .w60 { width: 60%; } .w70 { width: 70%; } .w85 { width: 85%; } .w100 { width: 100%; }
+  .sk-circle { border-radius: 50%; flex: none; }
+  .sk-pill { border-radius: var(--r-pill); }
+  .sk-stack { display: grid; gap: 8px; }
+  .sk-row { display: flex; align-items: center; gap: var(--sp-3); }
+  .sk-gap { margin-top: var(--sp-4); }
+  .sk-gap-lg { margin-top: var(--sp-5); }
+
+  /* الهيدر: شعار + أيقونات ثم شريط البحث */
+  .sk-hdr { padding: var(--sp-2) var(--gutter) var(--sp-3); background: var(--c-glass); border-bottom: 1px solid var(--c-line); position: sticky; top: 0; z-index: 40; }
+  .sk-hdr__top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); margin-bottom: var(--sp-2); min-height: 34px; }
+  .sk-hdr__search { height: 42px; border-radius: var(--r-pill); }
+  .sk-subnav { gap: 8px; padding: 10px var(--gutter); overflow: hidden; border-bottom: 1px solid var(--c-line); background: var(--c-bg); }
+  .sk-subnav .sk { height: 26px; flex: none; border-radius: var(--r-pill); }
+
+  /* الشريط السفلي أثناء التحميل */
+  .sk-tabbar { justify-items: center; align-items: center; }
+  .sk-tabbar .sk-tab { display: grid; justify-items: center; gap: 6px; }
+  .sk-tabbar .sk-tab .sk:first-child { width: 26px; height: 26px; }
+  .sk-tabbar .sk-tab .sk:last-child { width: 34px; height: 8px; border-radius: 4px; }
+
+  /* أجزاء الشاشات */
+  .sk-hero { height: 156px; border-radius: var(--r-md); }
+  .sk-cats { display: flex; gap: 14px; overflow: hidden; }
+  .sk-cat { display: grid; justify-items: center; gap: 8px; flex: none; width: 66px; }
+  .sk-cat .sk-circle { width: 62px; height: 62px; }
+  .sk-cat .sk-line { width: 44px; height: 9px; }
+  .sk-head { display: flex; align-items: center; justify-content: space-between; margin: var(--sp-5) 0 var(--sp-3); }
+  .sk-rail { display: flex; gap: 10px; overflow: hidden; margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+  .sk-mcard { flex: none; width: 138px; display: grid; gap: 8px; align-content: start; }
+  .sk-mcard .sk:first-child { height: 138px; border-radius: var(--r-md); }
+  .sk-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-3); }
+  .sk-card { display: grid; gap: 8px; align-content: start; }
+  .sk-card .sk:first-child { aspect-ratio: 4 / 5; border-radius: var(--r-md); }
+  .sk-chips { display: flex; gap: 8px; overflow: hidden; }
+  .sk-chips .sk { height: 34px; width: 84px; flex: none; border-radius: var(--r-pill); }
+  .sk-square { aspect-ratio: 1 / 1; border-radius: var(--r-md); margin-inline: calc(var(--gutter) * -1); border-radius: 0; }
+  .sk-dots { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+  .sk-dots .sk { width: 8px; height: 8px; border-radius: 50%; }
+  .sk-btn { height: 52px; border-radius: var(--r-pill); }
+  .sk-input { height: 50px; border-radius: var(--r-sm); }
+  .sk-line-item { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: var(--sp-3); align-items: start; padding-block: var(--sp-3); border-bottom: 1px solid var(--c-line); }
+  .sk-line-item > .sk:first-child { width: 84px; height: 104px; border-radius: var(--r-sm); }
+  .sk-avatar { width: 76px; height: 76px; }
+  .sk-stat { height: 64px; border-radius: var(--r-md); }
+  .sk-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-2); }
+  .sk-banner { height: 120px; border-radius: var(--r-md); }
+  .sk-panel { height: 150px; border-radius: var(--r-md); }
+
+  /* الصور أثناء التحميل: خلفية متحركة بدل مساحة فاضية */
+  img.sk-loading {
+    color: transparent; background: linear-gradient(90deg, var(--c-surface) 25%, var(--c-surface-hi) 50%, var(--c-surface) 75%);
+    background-size: 200% 100%; animation: sk-img 1.3s linear infinite;
+  }
+  @keyframes sk-img { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sk::after, img.sk-loading { animation-duration: 3s; }
+  }
+}

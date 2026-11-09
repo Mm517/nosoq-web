@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12294a">
+<title>لوحة الدعم — نَسَق</title>
+<link rel="icon" href="/assets/img/favicon.svg">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/assets/js/nasaq-config.js"></script>
+  <script src="/assets/js/nasaq-links.js"></script>
+<script src="/assets/js/icons.js"></script>
+<script src="/assets/js/support-common.js"></script>
+<style>
+#app{padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));max-width:1360px;margin:auto}
+.sp-top{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding:14px 18px;background:linear-gradient(135deg,#12294a,#1b3865);color:#fff;border-radius:20px;box-shadow:0 12px 30px rgba(18,41,74,.22)}
+.sp-top .lg{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.14);display:grid;place-items:center;flex:none}
+.sp-top h2{margin:0;font-size:18px;flex:1;font-weight:800}
+.sp-top .pill{background:rgba(255,255,255,.16);color:#fff}
+.sp-top .btn.g{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+.sp-top .btn.g:hover{background:rgba(255,255,255,.12);color:#fff;border-color:#fff}
+@media(max-width:600px){#app{padding:10px;padding-top:calc(10px + env(safe-area-inset-top,0px))}.sp-top{padding:10px 12px;border-radius:16px;margin-bottom:10px}.sp-top h2{font-size:16px}}
+</style>
+</head>
+<body><div id="app"></div>
+<script>
+const app=document.getElementById('app');
+Nosoq.login(app,r=>r==='support'||r==='admin',(role,who)=>{
+  app.innerHTML=`<div class="sp-top"><span class="lg">${NIcon('headset',22)}</span><h2>لوحة الدعم</h2><span class="pill">${role==='admin'?'مدير':'دعم'}</span><button class="btn g s" id="lo">${NIcon('arrow-left',16)}خروج</button></div><div id="m"></div>`;
+  document.getElementById('lo').onclick=async()=>{await Nosoq.sb.auth.signOut();location.reload()};
+  Nosoq.mountSupport(document.getElementById('m'),role,who);
+});
+</script>
+</body>
+</html>

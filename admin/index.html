@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#12294a">
+  <title>لوحة إدارة نَسَق</title>
+  <link rel="icon" href="/assets/img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/admin.css">
+  <link rel="stylesheet" href="/assets/css/admin-pro.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="/assets/js/nasaq-config.js"></script>
+  <script src="/assets/js/icons.js"></script>
+  <script src="/assets/js/api-shim.js"></script>
+  <script defer src="/assets/js/distance.js"></script>
+  <script defer src="/assets/js/admin.js"></script>
+</head>
+<body class="admin-body">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-orders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12l2 5H4l2-5zM4 7h16v13a2 2 0 01-2 2H6a2 2 0 01-2-2V7zM9 12h6"/></symbol><symbol id="i-apps" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 2h3a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1h3l1-2zM8 12l3 3 5-6"/></symbol><symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM22 21v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8"/></symbol><symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5M3 9a3 3 0 006 0 3 3 0 006 0 3 3 0 006 0M5 12v8h14v-8M10 20v-5h4v5"/></symbol><symbol id="i-bike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18a3 3 0 100-6 3 3 0 000 6zM19 18a3 3 0 100-6 3 3 0 000 6zM12 18l-2-6h6l3 6M9 8h3l1 4"/></symbol><symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8zM3 8l9 5 9-5M12 13v9"/></symbol><symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></symbol><symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h14v4M3 7v11a2 2 0 002 2h16V9H5a2 2 0 01-2-2zM17 14.5h.01"/></symbol><symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.6 7.1L3 21l1.9-5.4A8 8 0 1121 12z"/></symbol><symbol id="i-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4h13v12H1zM14 8h4l3 3v5h-7M5.5 20a2 2 0 100-4 2 2 0 000 4zM17.5 20a2 2 0 100-4 2 2 0 000 4z"/></symbol><symbol id="i-clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12l-8.5 8.5a5 5 0 01-7-7L14 5a3.3 3.3 0 014.7 4.7L10 18.4a1.7 1.7 0 01-2.4-2.4L15 8.6"/></symbol><symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></symbol><symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6M3.5 9a9 9 0 0114.8-3.4L23 10M1 14l4.7 4.4A9 9 0 0020.5 15"/></symbol><symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></symbol></svg>
+  <main class="admin-shell">
+    <section class="admin-login" id="admin-login">
+      <div class="admin-brand"><span class="admin-brand__dot"></span><strong>نَسَق</strong></div>
+      <h1>لوحة الإدارة</h1>
+      <p>سجّل الدخول بحساب الأدمن أو حساب الدعم.</p>
+      <form id="admin-login-form" class="admin-form">
+        <label>البريد الإلكتروني<input id="admin-email" type="email" autocomplete="username" dir="ltr" required></label>
+        <label>كلمة المرور<input id="admin-password" type="password" autocomplete="current-password" dir="ltr" required></label>
+        <button class="admin-button admin-button--primary" type="submit">دخول</button>
+        <p class="admin-error" id="admin-login-error" role="alert"></p>
+      </form>
+    </section>
+
+    <section class="admin-app" id="admin-app" hidden>
+      <div class="admin-backdrop" id="admin-backdrop" hidden></div>
+      <aside class="admin-side" id="admin-side">
+        <div class="admin-side__brand"><span class="admin-brand__dot"></span><strong>نَسَق</strong><small id="admin-role-tag">إدارة</small></div>
+        <nav class="admin-tabs" id="admin-tabs" aria-label="أقسام لوحة الإدارة">
+          <button class="admin-tab is-active" data-tab="orders" type="button"><svg class="ic"><use href="#i-orders"/></svg><span>الطلبات</span><i class="admin-tabbadge" id="orders-badge" hidden>0</i></button>
+          <button class="admin-tab" data-tab="deliveries" type="button"><svg class="ic"><use href="#i-truck"/></svg><span>التوصيلات</span></button>
+          <button class="admin-tab" data-tab="support" type="button"><svg class="ic"><use href="#i-chat"/></svg><span>الدعم</span><i class="admin-tabbadge" id="support-badge" hidden>0</i></button>
+          <button class="admin-tab" data-tab="applications" type="button"><svg class="ic"><use href="#i-apps"/></svg><span>طلبات التقديم</span></button>
+          <button class="admin-tab" data-tab="users" type="button"><svg class="ic"><use href="#i-users"/></svg><span>المستخدمون</span></button>
+          <button class="admin-tab" data-tab="sellers" type="button"><svg class="ic"><use href="#i-store"/></svg><span>البائعون</span></button>
+          <button class="admin-tab" data-tab="riders" type="button"><svg class="ic"><use href="#i-bike"/></svg><span>السائقون</span></button>
+          <button class="admin-tab" data-tab="products" type="button"><svg class="ic"><use href="#i-box"/></svg><span>المنتجات</span></button>
+          <button class="admin-tab" data-tab="financial" type="button"><svg class="ic"><use href="#i-chart"/></svg><span>اللوحة المالية</span></button>
+          <button class="admin-tab" data-tab="transactions" type="button"><svg class="ic"><use href="#i-wallet"/></svg><span>المعاملات</span></button>
+        </nav>
+        <div class="admin-side__foot">
+          <p id="admin-identity" dir="ltr">—</p>
+          <button class="admin-button admin-button--quiet" id="admin-logout" type="button"><svg class="ic"><use href="#i-out"/></svg><span>خروج</span></button>
+        </div>
+      </aside>
+
+      <div class="admin-main">
+        <header class="admin-header">
+          <button class="admin-burger" id="admin-burger" type="button" aria-label="القائمة" aria-controls="admin-side" aria-expanded="false"><span></span><span></span><span></span></button>
+          <div><h1 id="admin-page-title">الطلبات</h1><p><span class="admin-live"></span> تحديث تلقائي مباشر</p></div>
+          <div class="admin-header__actions"><button class="admin-button" id="admin-refresh" type="button"><svg class="ic"><use href="#i-refresh"/></svg><span>تحديث</span></button></div>
+        </header>
+        <div class="admin-notice" id="admin-notice" hidden></div>
+        <section class="admin-stats" id="admin-stats" aria-label="ملخص المتجر"></section>
+
+<!-- 2) طلبات التقديم -->
+      <section class="admin-panel is-active" id="panel-applications">
+        <div class="admin-toolbar">
+          <div><h1>طلبات التقديم</h1><p>طلبات البائعين والسائقين — راجع البيانات والمرفقات ثم اقبل أو ارفض مع ذكر السبب.</p></div>
+          <div class="admin-toolbar__filters">
+            <select class="admin-select" id="app-type-filter"><option value="">كل الأنواع</option><option value="seller">بائعين</option><option value="rider">سائقين</option></select>
+            <select class="admin-select" id="app-status-filter"><option value="">كل الحالات</option><option value="pending">قيد المراجعة</option><option value="approved">مقبول</option><option value="rejected">مرفوض</option></select>
+          </div>
+        </div>
+        <article class="admin-card admin-card--wide">
+          <div class="admin-table-wrap"><table class="admin-table">
+            <thead><tr><th>الطلب</th><th>مقدّم الطلب</th><th>النوع</th><th>التواصل</th><th>الحالة</th><th></th></tr></thead>
+            <tbody id="applications-body"></tbody>
+          </table></div>
+          <p class="admin-empty" id="applications-empty" hidden>لا توجد طلبات.</p>
+        </article>
+      </section>
+
+      <!-- 3) المستخدمون -->
+      <section class="admin-panel" id="panel-users">
+        <div class="admin-toolbar"><div><h1>المستخدمون</h1><p>كل حسابات نَسَق — العملاء والبائعون والسائقون والإدمن.</p></div></div>
+        <article class="admin-card admin-card--wide">
+          <div class="admin-table-wrap"><table class="admin-table">
+            <thead><tr><th>الاسم</th><th>التواصل</th><th>الدور</th><th>تاريخ التسجيل</th><th>الطلبات</th><th>إجمالي الإنفاق</th><th>الحالة</th><th></th></tr></thead>
+            <tbody id="users-body"></tbody>
+          </table></div>
+          <p class="admin-empty" id="users-empty" hidden>لا يوجد مستخدمون.</p>
+        </article>
+      </section>
+
+      <!-- 4) البائعون -->
+      <section class="admin-panel" id="panel-sellers">
+        <div class="admin-toolbar"><div><h1>البائعون</h1><p>كل المتاجر — المبيعات، الأرباح، العمولة، وإجراءات القبول/الرفض/الإيقاف.</p></div></div>
+        <article class="admin-card admin-card--wide">
+          <div class="admin-table-wrap"><table class="admin-table">
+            <thead><tr><th>المتجر</th><th>المنتجات</th><th>الطلبات</th><th>إجمالي المبيعات</th><th>العمولة</th><th>صافي الأرباح</th><th>الحالة</th><th></th></tr></thead>
+            <tbody id="sellers-body"></tbody>
+          </table></div>
+          <p class="admin-empty" id="sellers-empty" hidden>لا يوجد بائعون.</p>
+        </article>
+      </section>
+
+      <!-- 5) السائقون -->
+      <section class="admin-panel" id="panel-riders">
+        <div class="admin-toolbar"><div><h1>السائقون</h1><p>حالة الاتصال، الطلبات الحالية، الأرباح، وإجراءات المراجعة.</p></div></div>
+        <article class="admin-card admin-card--wide">
+          <div class="admin-table-wrap"><table class="admin-table">
+            <thead><tr><th>المندوب</th><th>الهاتف</th><th>المركبة</th><th>المدينة</th><th>الحالة الآن</th><th>الحساب</th><th></th></tr></thead>
+            <tbody id="riders-full-body"></tbody>
+          </table></div>
+          <p class="admin-empty" id="riders-full-empty" hidden>لا يوجد سائقون.</p>
+        </article>
+      </section>
+
+      <!-- 6) المنتجات -->
+      <section class="admin-panel" id="panel-products">
+        <div class="admin-toolbar">
+          <div><h1>المنتجات</h1><p>كل المنتجات المرفوعة — قبول، رفض بسبب، إخفاء، أو حذف.</p></div>
+          <div class="admin-toolbar__filters">
+            <select class="admin-select" id="product-status-filter">
+              <option value="">كل الحالات</option>
+              <option value="pending">قيد المراجعة</option>
+              <option value="active">مقبول</option>
+              <option value="rejected">مرفوض</option>
+              <option value="hidden">مخفي</option>
+              <option value="archived">مؤرشف</option>
+            </select>
+          </div>
+        </div>
+        <article class="admin-card admin-card--wide">
+          <div class="admin-table-wrap"><table class="admin-table">
+            <thead><tr><th>صورة</th><th>المنتج</th><th>السعر</th><th>المخزون</th><th>المتجر</th><th>الحالة</th><th></th></tr></thead>
+            <tbody id="products-body"></tbody>
+          </table></div>
+          <p class="admin-empty" id="products-empty" hidden>لا توجد منتجات.</p>
+        </article>
+      </section>
+
+      <!-- 7) الطلبات -->
+      <section class="admin-panel is-active" id="panel-orders">
+        <div class="ord-bar">
+          <div class="ord-chips" id="ord-chips" role="tablist" aria-label="فلترة الطلبات"></div>
+          <div class="ord-tools">
+            <input class="admin-select ord-search" id="ord-search" type="search" placeholder="ابحث برقم الطلب أو اسم العميل" dir="rtl">
+            <button class="admin-button ord-sound" id="ord-sound" type="button" aria-pressed="false"><i class="ic-slot" data-icon="bell-off" data-size="17"></i><span>صوت التنبيه</span></button>
+          </div>
+        </div>
+        <div class="ord-grid" id="orders-grid"></div>
+        <p class="admin-empty" id="orders-empty" hidden>لا توجد طلبات هنا.</p>
+      </section>
+
+      <!-- 8) اللوحة المالية -->
+      <section class="admin-panel" id="panel-financial">
+        <div class="admin-toolbar"><div><h1>اللوحة المالية</h1><p>ملخص شامل لمبيعات وعمولات ومدفوعات المنصة.</p></div></div>
+        <div class="admin-financial-grid" id="financial-grid"></div>
+      </section>
+
+      <!-- 9) المعاملات -->
+      <section class="admin-panel" id="panel-transactions">
+        <div class="admin-toolbar">
+          <div><h1>المعاملات المالية</h1><p>كل معاملة مرتبطة بطلب، مع العمولة والصافي.</p></div>
+          <div class="admin-toolbar__filters">
+            <select class="admin-select" id="transaction-status-filter">
+              <option value="">كل الحالات</option>
+              <option value="pending">معلّق</option>
+              <option value="paid">مدفوع</option>
+              <option value="refunded">مسترد</option>
+              <option value="failed">فشل</option>
+            </select>
+          </div>
+        </div>
+        <article class="admin-card admin-card--wide">
+          <div class="admin-table-wrap"><table class="admin-table">
+            <thead><tr><th>المعاملة</th><th>الطلب</th><th>البائع</th><th>السائق</th><th>المبلغ</th><th>العمولة</th><th>الصافي</th><th>الحالة</th><th>التاريخ</th><th></th></tr></thead>
+            <tbody id="transactions-body"></tbody>
+          </table></div>
+          <p class="admin-empty" id="transactions-empty" hidden>لا توجد معاملات بعد.</p>
+        </article>
+      </section>
+
+      <!-- الدعم -->
+      <section class="admin-panel" id="panel-support">
+        <div class="sup-summary" id="sup-summary"></div>
+        <div class="sup-shell" id="sup-shell">
+          <aside class="sup-list">
+            <div class="sup-groups" id="sup-groups" role="tablist" aria-label="نوع صاحب المحادثة"></div>
+            <div class="sup-filters">
+              <input class="admin-select" id="sup-search" type="search" placeholder="بحث بالكود أو الاسم" dir="rtl">
+              <select class="admin-select" id="sup-status-filter" aria-label="حالة المحادثة">
+                <option value="active">المفتوحة</option><option value="">الكل</option><option value="resolved">تم الحل</option><option value="closed">المقفولة</option>
+              </select>
+            </div>
+            <ul class="sup-items" id="sup-items"></ul>
+            <p class="admin-empty" id="support-empty" hidden>لا توجد محادثات.</p>
+          </aside>
+          <section class="sup-chat" id="sup-chat">
+            <div class="sup-placeholder" id="sup-placeholder"><svg class="ic"><use href="#i-chat"/></svg><p>اختار محادثة من القائمة عشان تبدأ الرد</p></div>
+            <div class="sup-conv" id="sup-conv" hidden>
+              <header class="sup-head">
+                <button class="sup-back" id="sup-back" type="button" aria-label="رجوع للقائمة"><i class="ic-slot" data-icon="chev-right" data-size="18"></i></button>
+                <div class="sup-head__txt"><h2 id="sup-title">—</h2><p id="sup-meta"></p></div>
+                <div class="sup-head__actions">
+                  <select class="admin-select" id="sup-status" aria-label="حالة المحادثة">
+                    <option value="open">مفتوحة</option><option value="in_progress">قيد المتابعة</option><option value="resolved">تم الحل</option><option value="closed">مقفولة</option>
+                  </select>
+                  <button class="admin-button admin-button--warn" id="sup-escalate" type="button" hidden><i class="ic-slot" data-icon="lifebuoy" data-size="17"></i><span>طلب مساعدة الإدارة</span></button>
+                  <button class="admin-button sup-close" id="sup-close-btn" type="button">قفل المحادثة</button>
+                  <button class="admin-button admin-button--danger" id="sup-delete" type="button" hidden><i class="ic-slot" data-icon="trash" data-size="17"></i><span>حذف</span></button>
+                </div>
+              </header>
+              <ol class="sup-thread" id="sup-thread"></ol>
+              <form class="sup-form" id="sup-form">
+                <div class="sup-previews" id="sup-previews"></div>
+                <div class="sup-row">
+                  <label class="sup-attach" title="إرفاق صورة" aria-label="إرفاق صورة"><input type="file" id="sup-file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden><svg class="ic"><use href="#i-clip"/></svg></label>
+                  <textarea id="sup-text" rows="1" maxlength="2000" placeholder="اكتب ردك…"></textarea>
+                  <button type="submit" class="admin-button admin-button--primary sup-send" id="sup-send"><svg class="ic"><use href="#i-send"/></svg><span>إرسال</span></button>
+                </div>
+              </form>
+              <div class="sup-closed" id="sup-closed" hidden><span>المحادثة مقفولة.</span><button class="admin-button" id="sup-reopen" type="button">إعادة فتح</button></div>
+            </div>
+          </section>
+        </div>
+        <article class="admin-card admin-card--wide sup-staff" id="staff-card" hidden>
+          <div class="admin-card__head"><div><h2>فريق الدعم</h2><p>أنشئ لكل موظف يوزر وكلمة مرور وحدّد له الأكواد اللي يستلمها (SL بائعين · RD سائقين · US مستخدمين · GS زوّار). كل موظف يشوف ويرد على أنواع المحادثات اللي حددتها له بس، من صفحة الدعم.</p></div><span class="admin-count" id="staff-count"></span></div>
+          <form class="sup-staff__form" id="staff-form">
+            <input class="admin-select" id="staff-name" type="text" placeholder="اسم الموظف" required>
+            <input class="admin-select" id="staff-email" type="email" placeholder="البريد (اليوزر)" dir="ltr" required>
+            <input class="admin-select" id="staff-pass" type="text" placeholder="كلمة مرور (6 أحرف+)" dir="ltr" minlength="6" required>
+            <div class="sup-codes" id="staff-codes">
+              <label><input type="checkbox" value="seller" checked> <b dir="ltr">SL</b> بائعين</label>
+              <label><input type="checkbox" value="rider"> <b dir="ltr">RD</b> سائقين</label>
+              <label><input type="checkbox" value="customer"> <b dir="ltr">US</b> مستخدمين</label>
+              <label><input type="checkbox" value="guest"> <b dir="ltr">GS</b> زوّار</label>
+            </div>
+            <button class="admin-button admin-button--primary" type="submit">إنشاء حساب موظف دعم</button>
+          </form>
+          <div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>الاسم</th><th>البريد (اليوزر)</th><th>الأكواد التي يتعامل معها</th><th>أُضيف في</th><th></th></tr></thead><tbody id="staff-body"></tbody></table></div>
+        </article>
+      </section>
+
+      <!-- التوصيلات (موجود مسبقاً) -->
+      <section class="admin-panel" id="panel-deliveries">
+        <div class="admin-toolbar"><div><h1>التوصيلات</h1><p>وزّع الطلبات غير المعيّنة وتابع حالة التسليم.</p></div></div>
+        <article class="admin-card admin-card--wide" id="radius-card">
+          <h2>نطاق «الطلبات القريبة» للسائق</h2>
+          <p>أقصى مسافة بين السائق والمتجر ليظهر له الطلب ضمن «الطلبات القريبة». من 1 متر إلى 50000 متر (50 كم). أمثلة: 1000 = 1 كم، 5000 = 5 كم، 50000 = 50 كم.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <label for="radius-input"><strong>النطاق (بالمتر)</strong></label>
+            <input class="admin-select" id="radius-input" type="number" min="1" max="50000" step="1" inputmode="numeric" dir="ltr" style="width:140px">
+            <button class="admin-button admin-button--primary" id="radius-save" type="button">حفظ</button>
+            <span id="radius-current" role="status"></span>
+          </div>
+        </article>
+        <article class="admin-card admin-card--wide">
+          <div class="admin-table-wrap"><table class="admin-table">
+            <thead><tr><th>الطلب</th><th>المتجر</th><th>العنوان</th><th>الحالة</th><th>المندوب</th><th></th></tr></thead>
+            <tbody id="deliveries-body"></tbody>
+          </table></div>
+          <p class="admin-empty" id="deliveries-empty" hidden>لا توجد توصيلات حالياً.</p>
+        </article>
+      </section>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal عام لكل التفاصيل والمراجعة -->
+  <div class="admin-modal-backdrop" id="admin-modal-backdrop" hidden>
+    <div class="admin-modal" role="dialog" aria-modal="true">
+      <div class="admin-modal__head">
+        <h2 id="admin-modal-title">التفاصيل</h2>
+        <button class="admin-modal__close" id="admin-modal-close" type="button" aria-label="إغلاق">×</button>
+      </div>
+      <div class="admin-modal__body" id="admin-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Lightbox لتكبير الصور -->
+  <div class="admin-lightbox" id="admin-lightbox" hidden>
+    <img id="admin-lightbox-img" src="" alt="صورة مكبّرة">
+  </div>
+
+  </body>
+</html>

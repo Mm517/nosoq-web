@@ -1,0 +1,139 @@
+/* ==========================================================================
+   css/tokens.css — متغيرات التصميم الوحيدة المصدر
+   الاتجاه: أبيض صالة عرض + رمادي بارد للخلفيات + أزرق نيلي كلون تفاعلي وحيد
+   كل لون في الموقع يُؤخذ من هنا فقط. لا توجد ألوان مكتوبة يدوياً في باقي الملفات.
+   ========================================================================== */
+:root {
+  /* ---- الألوان ---- */
+  --c-bg: #ffffff;
+  --c-white: #ffffff;            /* نص فوق ألوان التمييز والداكن */
+  --c-surface: #f4f5f7;          /* خلفية بلاطات المنتجات */
+  --c-surface-2: #e9ebef;
+  --c-ink: #15171c;
+  --c-ink-2: #454a55;
+  --c-ink-3: #656b78;            /* تباين 5.3:1 على الأبيض */
+  --c-line: #e2e5ea;
+  --c-line-strong: #c5cad3;
+  --c-accent: #2f45d4;           /* تباين 7.2:1 على الأبيض */
+  --c-accent-ink: #ffffff;
+  --c-accent-soft: #e8ebfc;
+  --c-accent-mid: #cdd3f8;       /* بطاقات العروض الفاتحة */
+  --c-accent-deep: #1f2f9a;      /* نص على الخلفية الفاتحة + بطاقات داكنة */
+  --c-star: #d9931a;
+  --c-success: #1f7a4c;
+  --c-success-soft: #e3f4ea;
+  --c-danger: #c62d3d;
+  --c-danger-soft: #fdf0f1;
+  --c-danger-ink: #7d1a26;
+  --c-warning: #8f5b00;
+  --c-warning-soft: #fff6e9;
+  --c-warning-line: #f3d9a8;
+  --c-warning-ink: #7a4e06;
+  --c-warning-icon: #b9790a;
+  --c-warning-deep: #5c3b03;
+  --c-focus: #2f45d4;
+
+  /* ---- ألوان فوق الخلفيات الداكنة ---- */
+  --c-on-dark: #ffffff;
+  --c-on-dark-2: #c9cdd6;
+  --c-line-on-dark: #6b7286;
+  --c-success-on-dark: #7ee2a8;
+  --c-danger-on-dark: #ff9aa6;
+
+  /* ---- أسطح شفافة ---- */
+  --c-glass: rgba(255, 255, 255, 0.94);
+  --c-scrim: rgba(21, 23, 28, 0.5);
+  --c-surface-hi: #fafbfc;
+  --c-nav: #15171c;              /* القائمة الجانبية للوحة البائع */
+
+  /* ---- الخطوط ---- */
+  --font-display: "Readex Pro", "IBM Plex Sans Arabic", system-ui, "Segoe UI", Tahoma, sans-serif;
+  --font-sans: "IBM Plex Sans Arabic", system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+
+  --fs-xs: 0.78rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-md: 1.125rem;
+  --fs-lg: 1.375rem;
+  --fs-xl: clamp(1.6rem, 1.25rem + 1.4vw, 2.2rem);
+  --fs-2xl: clamp(2rem, 1.4rem + 2.4vw, 3.2rem);
+  --fs-hero: clamp(2.6rem, 1.4rem + 5.2vw, 5.4rem);
+
+  /* ---- المسافات (سلّم 4px) ---- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4.5rem;
+  --sp-9: 6.5rem;
+
+  /* ---- الزوايا: تتدرّج حسب أهمية العنصر ---- */
+  --r-img: 4px;      /* صور المنتجات */
+  --r-sm: 8px;       /* حقول وشرائح */
+  --r-md: 14px;      /* لوحات */
+  --r-pill: 999px;   /* أزرار */
+
+  /* ---- الظلال ---- */
+  --shadow-pop: 0 10px 30px -8px rgba(21, 23, 28, 0.22);
+  --shadow-drawer: 0 0 60px rgba(21, 23, 28, 0.25);
+
+  /* ---- التخطيط ---- */
+  --container: 1320px;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --header-h: 72px;
+
+  /* ---- الحركة ---- */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-1: 160ms;
+  --dur-2: 320ms;
+
+  /* ---- طبقات ---- */
+  --z-header: 40;
+  --z-pop: 60;
+  --z-overlay: 90;
+  --z-drawer: 100;
+  --z-toast: 120;
+}
+
+/* الهيدر على الموبايل صفّان (الشعار + البحث) فيزيد ارتفاعه */
+@media (max-width: 979px) {
+  :root { --header-h: 116px; }
+}
+
+/* ---------- الوضع الداكن (يُفعَّل بـ data-theme="dark" على <html>، مستخدم في لوحة البائع) ---------- */
+[data-theme="dark"] {
+  --c-bg: #1b1e25;
+  --c-surface: #12141a;
+  --c-surface-2: #262a33;
+  --c-surface-hi: #20242c;
+  --c-nav: #0c0e12;
+  --c-ink: #eceef3;
+  --c-ink-2: #c3c8d2;
+  --c-ink-3: #9aa1af;
+  --c-line: #2b303a;
+  --c-line-strong: #464c5a;
+  --c-accent: #8393ff;
+  --c-accent-ink: #0f1220;
+  --c-accent-soft: #232a55;
+  --c-accent-mid: #34408a;
+  --c-accent-deep: #b7c0ff;
+  --c-success: #5fd394;
+  --c-success-soft: #14301f;
+  --c-danger: #ff7c8b;
+  --c-danger-soft: #3a1c22;
+  --c-danger-ink: #ffb8c0;
+  --c-warning: #f0b85a;
+  --c-warning-soft: #33280f;
+  --c-warning-line: #5c4a1c;
+  --c-warning-ink: #f3d089;
+  --c-warning-icon: #f0b85a;
+  --c-warning-deep: #f3d089;
+  --c-focus: #a9b5ff;
+  --c-glass: rgba(27, 30, 37, 0.94);
+  --c-scrim: rgba(0, 0, 0, 0.6);
+  --shadow-pop: 0 10px 30px -8px rgba(0, 0, 0, 0.6);
+  color-scheme: dark;
+}

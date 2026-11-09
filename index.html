@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>بتاع محلات كل ما تحتاجه في مكان واحد</title>
+  <meta name="description" content="نَسَق: سوق عربي موثوق لكل احتياجاتك، إلكترونيات وأجهزة منزلية وأزياء وجمال وسوبر ماركت وأكثر. شحن مجاني فوق 500 ج.م وإرجاع خلال 14 يوماً.">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="نَسَق | أناقة هادئة لكل يوم">
+  <meta property="og:description" content="قطع مختارة بعناية بخامات عالية الجودة وتصاميم بسيطة.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2315171c'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%232f45d4'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/mobile-app.css">
+  <script src="/assets/js/skeleton.js"></script>
+  <link rel="stylesheet" href="/assets/css/pages.css">
+  <link rel="stylesheet" href="/assets/css/mobile-home.css">
+  <link rel="stylesheet" href="/assets/css/intro.css">
+  <link rel="stylesheet" href="/assets/css/app-notify.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "Organization", "name": "نَسَق", "url": "/", "email": "hello@nasaq.example" },
+      { "@type": "WebSite", "name": "نَسَق", "url": "/",
+        "potentialAction": { "@type": "SearchAction", "target": "/shop?q={search_term_string}", "query-input": "required name=search_term_string" } }
+    ]
+  }
+  </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+    <script src="/assets/js/nasaq-config.js"></script>
+  <script src="/assets/js/nasaq-links.js"></script>
+    <script src="/assets/js/api-shim.js"></script>
+  <script src="/assets/js/buyer-location.js"></script>
+    <script defer src="/assets/js/cloud.js"></script>
+    <script defer src="/assets/js/products.js"></script>
+  <script defer src="/assets/js/market.js"></script>
+  <script defer src="/assets/js/cart.js"></script>
+  <script defer src="/assets/js/i18n-dict.js"></script>
+  <script defer src="/assets/js/i18n.js"></script>
+  <script defer src="/assets/js/geo.js"></script>
+  <script defer src="/assets/js/distance.js"></script>
+  <script defer src="/assets/js/ui.js"></script>
+  <script defer src="/assets/js/home.js"></script>
+  <script defer src="/assets/js/mobile-home.js"></script>
+</head>
+<body data-page="home">
+  <header id="site-header" class="site-header"></header>
+  <noscript><p style="padding:1rem;text-align:center">يحتاج المتجر إلى تفعيل JavaScript لعرض المنتجات وإدارة السلة.</p></noscript>
+
+  <main id="main" tabindex="-1">
+    <div class="m-home" id="m-home" aria-label="الصفحة الرئيسية"></div>
+    <!-- لافتات الرئيسية -->
+    <section class="container hero-rail desk-only" aria-label="لافتات وعروض المتجر" id="hero-rail-root"></section>
+
+    <!-- بطاقات التسوق السريع -->
+    <section class="container tiles desk-only" aria-label="تسوّق بسرعة">
+      <div class="tile-row" id="tiles-1"></div>
+      <div class="tile-row" id="tiles-2"></div>
+    </section>
+
+    <!-- منتجات قد تهمّك -->
+    <section class="container block desk-only" id="more-root" aria-label="منتجات قد تهمّك"></section>
+
+    <!-- وصل حديثاً -->
+    <section class="section container desk-only" aria-labelledby="new-title">
+      <div class="section__head">
+        <h2 class="section__title" id="new-title">وصل حديثاً</h2>
+        <a class="section__link" href="/shop?sort=new">عرض الكل</a>
+      </div>
+      <div class="grid grid--4" id="new-grid" aria-busy="true"></div>
+    </section>
+
+    <!-- عروض لفترة محدودة -->
+    <section class="container block desk-only" id="deals-root" aria-label="عروض لفترة محدودة"></section>
+
+    <!-- شاهدتها مؤخراً -->
+    <section class="container block desk-only" id="recent-root" aria-label="شاهدتها مؤخراً" hidden></section>
+
+    <!-- توصيات مخصصة -->
+    <section class="container" aria-labelledby="recs-title">
+      <div class="recs-cta">
+        <h2 id="recs-title">سجّل الدخول لرؤية توصيات تناسبك</h2>
+        <a class="btn btn--accent btn--lg" href="/auth">تسجيل الدخول</a>
+        <p>ليس لديك حساب؟ <a href="/auth?tab=signup">أنشئ حسابك</a></p>
+      </div>
+    </section>
+
+    <!-- المزايا -->
+    <section class="section section--tight container" aria-label="مزايا التسوق">
+      <div class="benefits">
+        <div class="benefit">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-truck"></use></svg>
+          <div><h3>شحن مجاني فوق 500 ج.م</h3><p>يصلك الطلب خلال 3 إلى 5 أيام عمل، أو أسرع بالشحن السريع.</p></div>
+        </div>
+        <div class="benefit">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-refresh"></use></svg>
+          <div><h3>إرجاع خلال 14 يوماً</h3><p>لم تناسبك القطعة؟ أعدها بحالتها الأصلية واسترد مبلغك كاملاً.</p></div>
+        </div>
+        <div class="benefit">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-shield"></use></svg>
+          <div><h3>دفع آمن</h3><p>ادفع بالبطاقة أو عند الاستلام، وبياناتك محمية دائماً.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- النشرة -->
+    <section class="container" aria-labelledby="news-title">
+      <div class="newsletter">
+        <div>
+          <h2 id="news-title">كن أول من يعرف بالقطع الجديدة</h2>
+          <p>رسالة واحدة كل أسبوعين، بلا إزعاج.</p>
+        </div>
+        <form id="newsletter-form" novalidate>
+          <div class="field">
+            <label for="news-email" class="sr-only">البريد الإلكتروني</label>
+            <div class="newsletter__row">
+              <input class="input" id="news-email" type="email" name="email" placeholder="بريدك الإلكتروني" autocomplete="email" dir="ltr" aria-describedby="news-error">
+              <button class="btn btn--primary" type="submit">اشترك</button>
+            </div>
+            <p class="field__error" id="news-error" aria-live="polite"></p>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+
+  <script src="/assets/js/intro.js"></script>
+  <script src="/assets/js/app-notify.js"></script>
+</body>
+</html>

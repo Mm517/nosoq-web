@@ -1,0 +1,119 @@
+/* ==========================================================================
+   css/onboarding.css — مُحمَّل فقط في: auth.html, become-seller.html,
+   become-rider.html, application-status.html
+   تخطيطات خاصة بهذه الصفحات فقط (تابات، رفع ملفات، خطوات الحالة).
+   الألوان والخطوط هنا هي نفسها في باقي المتجر، مأخوذة من tokens.css.
+   ========================================================================== */
+
+/* ---------- الحاوية العامة للصفحات ---------- */
+.onboarding { max-width: 640px; margin-inline: auto; padding-block: var(--sp-7) var(--sp-9); }
+.onboarding--wide { max-width: 760px; }
+.onboarding__head { margin-top: var(--sp-6); }
+.onboarding__head h1 { font-size: var(--fs-xl); }
+.onboarding__sub { margin-top: 0.5rem; color: var(--c-ink-2); }
+
+/* ---------- التابات ---------- */
+.tabs { display: flex; gap: 4px; padding: 4px; border: 1.5px solid var(--c-line-strong); border-radius: var(--r-pill); background: var(--c-white); }
+.tab {
+  flex: 1; text-align: center; padding: 0.7rem 1rem; border-radius: var(--r-pill);
+  font-size: var(--fs-sm); color: var(--c-ink-2); transition: background var(--dur-1), color var(--dur-1);
+}
+.tab:hover { background: var(--c-surface); }
+.tab[aria-selected="true"], .tab[aria-current="page"] { background: var(--c-accent); color: var(--c-white); }
+.tab[aria-selected="true"]:hover, .tab[aria-current="page"]:hover { background: var(--c-accent); }
+
+/* ---------- نموذج تسجيل الدخول ---------- */
+.auth-form { display: grid; gap: var(--sp-4); margin-top: var(--sp-6); }
+.field__row { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
+.form-foot { text-align: center; margin-top: var(--sp-6); padding-top: var(--sp-6); border-top: 1px solid var(--c-line); }
+.form-foot p { color: var(--c-ink-2); font-size: var(--fs-sm); }
+.form-foot .btn { margin-top: 0.8rem; }
+.onboarding__crosslink { margin-top: var(--sp-6); text-align: center; font-size: var(--fs-sm); color: var(--c-ink-3); }
+.onboarding__crosslink a { color: var(--c-accent); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- رفع الملفات ---------- */
+.dropzone {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.4rem; min-height: 128px; padding: var(--sp-5); text-align: center;
+  border: 1.5px dashed var(--c-line-strong); border-radius: var(--r-sm); background: var(--c-white);
+  transition: border-color var(--dur-1), background var(--dur-1);
+}
+.dropzone:hover, .dropzone:focus-within { border-color: var(--c-accent); background: var(--c-accent-soft); }
+.dropzone__icon { width: 1.8rem; height: 1.8rem; color: var(--c-ink-3); }
+.dropzone strong { color: var(--c-accent); font-weight: 400; }
+.dropzone small { color: var(--c-ink-3); font-size: var(--fs-xs); }
+.dropzone.has-file { border-style: solid; border-color: var(--c-success); }
+.dropzone.has-file .dropzone__icon { color: var(--c-success); }
+.dropzone input[type="file"] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+/* ---------- عنوان الخطوة برقم ---------- */
+.step-legend { display: flex; align-items: center; gap: 0.6rem; }
+.step-legend__num {
+  display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; flex: none;
+  background: var(--c-accent); color: var(--c-white); font-size: var(--fs-sm); font-family: var(--font-display);
+}
+
+/* ---------- اختيار وسيلة التوصيل ---------- */
+.vehicle-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-3); }
+@media (min-width: 600px) { .vehicle-grid { grid-template-columns: repeat(4, 1fr); } }
+.vehicle-option {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  padding: 1rem 0.5rem; border: 1.5px solid var(--c-line-strong); border-radius: var(--r-sm);
+  text-align: center; cursor: pointer; transition: border-color var(--dur-1), background var(--dur-1), color var(--dur-1);
+}
+.vehicle-option input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.vehicle-option:hover { border-color: var(--c-ink-3); }
+.vehicle-option:has(input:checked) { border-color: var(--c-accent); background: var(--c-accent-soft); color: var(--c-accent); }
+.vehicle-option:has(input:focus-visible) { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+.vehicle-option .icon { width: 1.7rem; height: 1.7rem; }
+.vehicle-option span { font-size: var(--fs-sm); }
+
+/* ---------- صندوق التنويه ---------- */
+.notice { display: flex; gap: 0.8rem; padding: var(--sp-4) var(--sp-5); background: var(--c-warning-soft); border: 1px solid var(--c-warning-line); border-radius: var(--r-sm); color: var(--c-warning-ink); }
+.notice .icon { color: var(--c-warning-icon); flex: none; margin-top: 0.2rem; }
+.notice strong { display: block; margin-bottom: 0.2rem; color: var(--c-warning-deep); }
+.notice p { font-size: var(--fs-sm); line-height: 1.6; }
+
+/* ---------- صفحة تأكيد الطلب ---------- */
+.status-hero { display: grid; justify-items: center; gap: var(--sp-3); text-align: center; padding-block: var(--sp-6) var(--sp-5); }
+.status-hero__icon { position: relative; display: grid; place-items: center; width: 84px; height: 84px; border-radius: 50%; background: var(--c-accent-soft); color: var(--c-accent); }
+.status-hero__icon .icon { width: 2.4rem; height: 2.4rem; }
+.status-hero__icon .icon--badge { position: absolute; inset-block-end: -2px; inset-inline-end: -2px; width: 1.6rem; height: 1.6rem; padding: 0.25rem; border-radius: 50%; background: var(--c-bg); box-shadow: 0 0 0 2px var(--c-bg); color: var(--c-accent); }
+.status-hero h1 { font-size: var(--fs-2xl); }
+.status-hero p { max-width: 46ch; color: var(--c-ink-2); }
+
+.status-list { display: grid; gap: var(--sp-3); margin-block: var(--sp-6); }
+.status-step { display: flex; align-items: flex-start; gap: var(--sp-3); padding: var(--sp-4); border: 1px solid var(--c-line); border-radius: var(--r-sm); background: var(--c-white); }
+.status-step__num { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; flex: none; background: var(--c-surface); color: var(--c-ink-2); font-family: var(--font-display); }
+.status-step__num .icon { width: 1rem; height: 1rem; }
+.status-step__body { flex: 1; min-width: 0; }
+.status-step__title { font-weight: 400; }
+.status-step__desc { margin-top: 0.15rem; color: var(--c-ink-2); font-size: var(--fs-sm); }
+.status-step__badge { flex: none; font-size: var(--fs-xs); padding: 0.2rem 0.65rem; border-radius: var(--r-pill); white-space: nowrap; align-self: center; }
+.status-step.is-done .status-step__num { background: var(--c-success-soft); color: var(--c-success); }
+.status-step.is-done .status-step__badge { background: var(--c-success-soft); color: var(--c-success); }
+.status-step.is-active .status-step__num { background: var(--c-accent-soft); color: var(--c-accent); }
+.status-step.is-active .status-step__badge { background: var(--c-accent-soft); color: var(--c-accent); }
+.status-step.is-pending .status-step__badge { background: var(--c-surface); color: var(--c-ink-3); }
+
+.status-details { width: 100%; margin-bottom: var(--sp-6); }
+
+.otp-section { width: 100%; padding-top: var(--sp-6); border-top: 1px solid var(--c-line); text-align: center; }
+.otp-section h2 { font-size: var(--fs-md); }
+.otp-section > p { margin-top: 0.3rem; color: var(--c-ink-2); font-size: var(--fs-sm); }
+.otp { direction: ltr; display: flex; justify-content: center; gap: 0.6rem; margin-top: var(--sp-5); }
+.otp input {
+  width: 46px; height: 56px; text-align: center; font-size: 1.3rem; font-family: var(--font-display);
+  border: 1.5px solid var(--c-line-strong); border-radius: var(--r-sm); background: var(--c-white);
+}
+.otp input:focus { outline: none; border-color: var(--c-accent); box-shadow: 0 0 0 3px var(--c-accent-soft); }
+.otp input.is-filled { border-color: var(--c-ink-3); }
+.otp-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-2) var(--sp-5); margin-top: var(--sp-4); font-size: var(--fs-sm); }
+.otp-actions .link-btn[disabled] { color: var(--c-ink-3); text-decoration: none; cursor: default; }
+
+.status-success { display: none; width: 100%; justify-items: center; gap: var(--sp-3); text-align: center; padding-block: var(--sp-5); }
+.status-success.is-visible { display: grid; }
+.status-success .status-hero__icon { background: var(--c-success-soft); color: var(--c-success); }
+
+.status-actions { width: 100%; display: grid; gap: var(--sp-3); margin-top: var(--sp-6); }
+.status-support { text-align: center; margin-top: var(--sp-5); }

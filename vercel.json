@@ -1,0 +1,192 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/seller",
+      "destination": "https://nosoq-seller.vercel.app",
+      "permanent": false
+    },
+    {
+      "source": "/seller.html",
+      "destination": "https://nosoq-seller.vercel.app",
+      "permanent": false
+    },
+    {
+      "source": "/become-seller",
+      "destination": "https://nosoq-seller.vercel.app/become-seller",
+      "permanent": false
+    },
+    {
+      "source": "/become-seller.html",
+      "destination": "https://nosoq-seller.vercel.app/become-seller",
+      "permanent": false
+    },
+    {
+      "source": "/rider",
+      "destination": "https://nosoq-driver.vercel.app",
+      "permanent": false
+    },
+    {
+      "source": "/rider.html",
+      "destination": "https://nosoq-driver.vercel.app",
+      "permanent": false
+    },
+    {
+      "source": "/become-rider",
+      "destination": "https://nosoq-driver.vercel.app/become-rider",
+      "permanent": false
+    },
+    {
+      "source": "/become-rider.html",
+      "destination": "https://nosoq-driver.vercel.app/become-rider",
+      "permanent": false
+    },
+    {
+      "source": "/application-status",
+      "destination": "https://nosoq-seller.vercel.app/application-status",
+      "permanent": false
+    },
+    {
+      "source": "/application-status.html",
+      "destination": "https://nosoq-seller.vercel.app/application-status",
+      "permanent": false
+    },
+    {
+      "source": "/shop.html",
+      "destination": "/shop",
+      "permanent": true
+    },
+    {
+      "source": "/cart.html",
+      "destination": "/cart",
+      "permanent": true
+    },
+    {
+      "source": "/checkout.html",
+      "destination": "/checkout",
+      "permanent": true
+    },
+    {
+      "source": "/auth.html",
+      "destination": "/auth",
+      "permanent": true
+    },
+    {
+      "source": "/profile.html",
+      "destination": "/profile",
+      "permanent": true
+    },
+    {
+      "source": "/support.html",
+      "destination": "/support",
+      "permanent": true
+    },
+    {
+      "source": "/product.html",
+      "destination": "/product",
+      "permanent": true
+    },
+    {
+      "source": "/store.html",
+      "destination": "/store",
+      "permanent": true
+    },
+    {
+      "source": "/admin.html",
+      "destination": "/admin",
+      "permanent": true
+    },
+    {
+      "source": "/admin-order.html",
+      "destination": "/admin/order",
+      "permanent": true
+    },
+    {
+      "source": "/pages/shop",
+      "destination": "/shop",
+      "permanent": true
+    },
+    {
+      "source": "/pages/cart",
+      "destination": "/cart",
+      "permanent": true
+    },
+    {
+      "source": "/pages/checkout",
+      "destination": "/checkout",
+      "permanent": true
+    },
+    {
+      "source": "/pages/auth",
+      "destination": "/auth",
+      "permanent": true
+    },
+    {
+      "source": "/pages/profile",
+      "destination": "/profile",
+      "permanent": true
+    },
+    {
+      "source": "/pages/support",
+      "destination": "/support",
+      "permanent": true
+    },
+    {
+      "source": "/pages/product",
+      "destination": "/product",
+      "permanent": true
+    },
+    {
+      "source": "/pages/store",
+      "destination": "/store",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/shop",
+      "destination": "/pages/shop.html"
+    },
+    {
+      "source": "/cart",
+      "destination": "/pages/cart.html"
+    },
+    {
+      "source": "/checkout",
+      "destination": "/pages/checkout.html"
+    },
+    {
+      "source": "/auth",
+      "destination": "/pages/auth.html"
+    },
+    {
+      "source": "/profile",
+      "destination": "/pages/profile.html"
+    },
+    {
+      "source": "/support",
+      "destination": "/pages/support.html"
+    },
+    {
+      "source": "/product/:market/:name",
+      "destination": "/pages/product.html"
+    },
+    {
+      "source": "/campaigns/:campaign/:name",
+      "destination": "/pages/product.html"
+    },
+    {
+      "source": "/product",
+      "destination": "/pages/product.html"
+    },
+    {
+      "source": "/store/:slug",
+      "destination": "/pages/store.html"
+    },
+    {
+      "source": "/store",
+      "destination": "/pages/store.html"
+    }
+  ]
+}

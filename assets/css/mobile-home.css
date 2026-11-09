@@ -1,0 +1,201 @@
+/* ==========================================================================
+   css/mobile-home.css — الرئيسية على الموبايل فقط (أقل من 768px)
+   نفس ألوان الموقع (tokens.css) بتخطيط شبيه بتطبيقات التسوق: لافتات، أقسام دائرية،
+   بطاقات منتجات بحدّ خفيف، وأقسام لكل فئة. شاشة الكمبيوتر لا تتأثر إطلاقاً.
+   ========================================================================== */
+.m-home { display: none; }
+
+@media (max-width: 767px) {
+  .desk-only { display: none !important; }
+  .m-home { display: block; padding-bottom: var(--sp-4); }
+  .m-home .container { padding-inline: var(--gutter); }
+
+  /* سكيلتون الرئيسية على الموبايل: يظهر بينما js/mobile-home.js يبني القسم،
+     شكل تقريبي للافتة + شريط الأقسام + صف بطاقات، ويختفي فور امتلاء #m-home */
+  .m-home:empty { padding-block: var(--sp-3) 0; }
+  .m-home:empty::before {
+    content: ""; display: block; height: 156px; margin-inline: var(--gutter); border-radius: var(--r-md);
+    background: linear-gradient(90deg, var(--c-surface) 25%, var(--c-surface-hi) 37%, var(--c-surface) 63%);
+    background-size: 400% 100%; animation: shimmer 1.5s ease infinite;
+  }
+  .m-home:empty::after {
+    content: ""; display: block; height: 210px; margin: var(--sp-4) var(--gutter) 0; border-radius: var(--r-md);
+    background: linear-gradient(90deg, var(--c-surface) 25%, var(--c-surface-hi) 37%, var(--c-surface) 63%);
+    background-size: 400% 100%; animation: shimmer 1.5s ease infinite;
+  }
+  .m-sec { padding-block: var(--sp-4) 0; }
+  .m-sec > * + * { margin-top: var(--sp-3); }
+
+  /* ---------- عنوان القسم + زر «عرض الكل» ---------- */
+  .m-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); }
+  .m-head h2 { font-size: 1.15rem; line-height: 1.4; font-weight: 700; }
+  .m-head__main { display: grid; gap: 2px; min-width: 0; }
+  .m-view {
+    display: inline-flex; align-items: center; min-height: 34px; padding: 0 0.9rem; flex: none;
+    border: 1px solid var(--c-line-strong); border-radius: 6px; background: var(--c-bg);
+    font-size: var(--fs-xs); font-weight: 600; color: var(--c-ink); white-space: nowrap;
+  }
+  .m-view:active { background: var(--c-surface); }
+  .m-count { justify-self: start;
+    display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.1rem 0.6rem; border-radius: var(--r-pill);
+    background: var(--c-danger-soft); color: var(--c-danger-ink); font-size: var(--fs-xs); font-weight: 600; white-space: nowrap;
+  }
+  .m-count .icon { width: 0.95rem; height: 0.95rem; }
+
+  /* ---------- شريط أفقي (Rail) بأسهم ---------- */
+  .mrail { position: relative; margin-inline: calc(var(--gutter) * -1); }
+  .mrail__track {
+    display: flex; gap: 10px; padding: 2px var(--gutter) 4px; scroll-padding-inline: var(--gutter);
+    overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .mrail__track::-webkit-scrollbar { display: none; }
+  .mrail__track > * { scroll-snap-align: start; }
+  .mrail__nav {
+    position: absolute; inset-block-start: 38%; z-index: 2; transform: translateY(-50%);
+    display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+    background: var(--c-bg); border: 1px solid var(--c-line-strong);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--c-ink) 18%, transparent);
+  }
+  .mrail__nav .icon { width: 1.1rem; height: 1.1rem; }
+  .mrail__nav--prev { inset-inline-start: 6px; }
+  .mrail__nav--next { inset-inline-end: 6px; }
+  .mrail--cats .mrail__nav, .mrail--tiles .mrail__nav { inset-block-start: 34px; }
+
+  /* ---------- اللافتات ---------- */
+  .m-hero { padding-block: var(--sp-3) 0; }
+  .mhero { overflow: hidden; border-radius: var(--r-md); background: var(--c-surface); }
+  .mhero__strip {
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 30px; padding: 0 var(--sp-3);
+    background: var(--c-accent); color: var(--c-accent-ink); font-size: var(--fs-xs); font-weight: 600; text-align: center;
+  }
+  .mhero__strip .icon { width: 1rem; height: 1rem; }
+  .mhero__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .mhero__track::-webkit-scrollbar { display: none; }
+  .mb {
+    position: relative; flex: 0 0 100%; min-width: 0; height: 156px; overflow: hidden; scroll-snap-align: start;
+    display: flex; align-items: center; padding: 0 var(--sp-4);
+  }
+  .mb__txt { position: relative; z-index: 2; display: grid; justify-items: start; gap: 0.3rem; width: 58%; }
+  .mb__txt strong { font-family: var(--font-display); font-size: 1.12rem; line-height: 1.3; font-weight: 700; letter-spacing: -0.01em; }
+  .mb__txt small { font-size: var(--fs-xs); line-height: 1.5; opacity: 0.9; }
+  .mb__cta { display: inline-flex; align-items: center; min-height: 32px; margin-top: 0.2rem; padding: 0 0.9rem; border-radius: var(--r-pill); background: var(--c-white); color: var(--c-ink); font-size: var(--fs-xs); font-weight: 700; }
+  .mb__art { position: absolute; inset-block: 0; inset-inline-end: 0; width: 46%; pointer-events: none; }
+  .mb__art img { position: absolute; object-fit: contain; }
+  .mb__art img:nth-child(1) { width: 62%; height: 84%; inset-inline-end: 34%; inset-block-end: 6%; transform: rotate(-6deg); }
+  .mb__art img:nth-child(2) { width: 58%; height: 78%; inset-inline-end: 2%; inset-block-end: 4%; transform: rotate(5deg); }
+  .mb__art img:only-child { width: 82%; height: 88%; inset-inline-end: 8%; }
+  .mb__art .mb__ph { object-fit: cover; border-radius: var(--r-sm); background: var(--c-white); box-shadow: 0 6px 16px color-mix(in srgb, var(--c-ink) 28%, transparent); }
+  .mb--deep { background: linear-gradient(135deg, var(--c-accent-deep), var(--c-accent)); color: var(--c-white); }
+  .mb--ink { background: linear-gradient(135deg, var(--c-ink), var(--c-accent-deep)); color: var(--c-white); }
+  .mb--soft { background: var(--c-accent-soft); color: var(--c-ink); }
+  .mb--soft .mb__cta { background: var(--c-ink); color: var(--c-white); }
+  .mb--mid { background: var(--c-accent-mid); color: var(--c-ink); }
+  .mb--mid .mb__cta { background: var(--c-ink); color: var(--c-white); }
+  .mb--ad { background: var(--c-ink); color: var(--c-white); }
+  .mb__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .mb--ad::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to left, color-mix(in srgb, var(--c-ink) 78%, transparent), transparent 90%); }
+  .mb__tag { position: absolute; z-index: 2; inset-block-start: 8px; inset-inline-end: 8px; }
+  .mdots { display: flex; justify-content: center; gap: 6px; padding-block: 8px 2px; }
+  .mdots button { width: 6px; height: 6px; padding: 0; border-radius: var(--r-pill); background: var(--c-line-strong); transition: width var(--dur-1) var(--ease), background var(--dur-1); }
+  .mdots button.is-on { width: 18px; background: var(--c-accent); }
+
+  /* ---------- شريط الأقسام الدائرية ---------- */
+  .m-cats { padding-block: var(--sp-3) 0; }
+  .mcat { display: grid; justify-items: center; align-content: start; gap: 6px; flex: 0 0 auto; width: 68px; text-align: center; }
+  .mcat__img {
+    display: grid; place-items: center; width: 64px; height: 64px; overflow: hidden; border-radius: 18px;
+    background: var(--c-surface); border: 1px solid var(--c-line);
+  }
+  .mcat__img img { width: 100%; height: 100%; object-fit: cover; }
+  .mcat__img--pct { background: var(--c-accent); border-color: var(--c-accent); color: var(--c-accent-ink); align-content: center; gap: 0; line-height: 1.1; }
+  .mcat__img--pct b { font-family: var(--font-display); font-size: 1rem; }
+  .mcat__img--pct small { font-size: 0.65rem; }
+  .mcat__img--new { background: var(--c-ink); border-color: var(--c-ink); color: var(--c-white); font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; }
+  .mcat__label { font-size: 0.7rem; line-height: 1.35; font-weight: 500; color: var(--c-ink-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .mcat:active .mcat__img { transform: scale(0.96); }
+
+  /* ---------- بلاطات الأقسام الفرعية (مربعات بزوايا ناعمة) ---------- */
+  .mtile { display: grid; justify-items: center; align-content: start; gap: 6px; flex: 0 0 auto; width: 82px; text-align: center; }
+  .mtile__img {
+    display: block; width: 82px; height: 82px; overflow: hidden; border-radius: 20px;
+    background: radial-gradient(90% 90% at 30% 20%, var(--c-white), var(--c-surface-2));
+    border: 1px solid var(--c-line);
+  }
+  .mtile__img img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; }
+  .mtile__label { font-size: 0.72rem; line-height: 1.35; font-weight: 500; color: var(--c-ink-2); }
+  .mtile:active .mtile__img { transform: scale(0.96); }
+
+  /* ---------- بطاقة المنتج ---------- */
+  .mc {
+    position: relative; display: grid; gap: 6px; align-content: start; flex: 0 0 auto; width: clamp(148px, 42vw, 176px); min-width: 0;
+    padding: 8px; border: 1px solid var(--c-line); border-radius: 12px; background: var(--c-bg);
+  }
+  .mc__media { position: relative; display: block; aspect-ratio: 1; overflow: hidden; border-radius: 8px; background: var(--c-surface); }
+  .mc__link { display: block; height: 100%; }
+  .mc__media img { width: 100%; height: 100%; object-fit: cover; }
+  .mc__wish.wish-btn { position: absolute; inset-block-start: 6px; inset-inline-end: 6px; width: 30px; height: 30px; background: var(--c-white); box-shadow: 0 1px 4px color-mix(in srgb, var(--c-ink) 16%, transparent); }
+  .mc__wish .icon { width: 1.05rem; height: 1.05rem; }
+  .mc__add {
+    position: absolute; inset-block-end: 6px; inset-inline-end: 6px; display: grid; place-items: center; width: 34px; height: 34px;
+    border-radius: 50%; background: var(--c-white); border: 1px solid var(--c-line-strong); color: var(--c-ink);
+    box-shadow: 0 1px 4px color-mix(in srgb, var(--c-ink) 16%, transparent);
+  }
+  .mc__add:active { background: var(--c-accent-soft); }
+  .mc__ad { position: absolute; z-index: 1; inset-block-start: 6px; inset-inline-start: 6px; padding: 0 0.45rem; border-radius: 6px; background: var(--c-glass); font-size: 0.65rem; font-weight: 600; color: var(--c-ink-2); }
+  .mc__title { font-family: var(--font-sans); font-size: 0.8125rem; font-weight: 500; line-height: 1.5; color: var(--c-ink); min-height: 3em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .mc__rate { display: inline-flex; align-items: center; gap: 0.25rem; justify-self: start; padding: 0 0.5rem; border-radius: 6px; background: var(--c-surface); font-size: 0.72rem; line-height: 1.8; color: var(--c-ink-3); }
+  .mc__rate::before { content: ""; display: inline-block; width: 0.85em; height: 0.85em; margin-inline-end: 0.2em; vertical-align: -0.08em; background: var(--c-success); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z'/%3E%3C/svg%3E") center / contain no-repeat; }
+  .mc__rate b { color: var(--c-ink); font-weight: 600; }
+  .mc__rate--none::before { content: none; }
+  .mc__price { line-height: 1.3; }
+  .mc__price strong { font-family: var(--font-display); font-size: 1.02rem; font-weight: 700; }
+  .mc__old { display: flex; align-items: baseline; gap: 0.4rem; min-height: 1.3em; margin-top: -4px; font-size: 0.72rem; line-height: 1.3; }
+  .mc__old del { color: var(--c-ink-3); }
+  .mc__old .pct { direction: ltr; unicode-bidi: isolate; font-weight: 600; }
+  .mc__note { display: flex; align-items: center; gap: 0.3rem; font-size: 0.7rem; line-height: 1.4; }
+  .mc__note .icon { width: 0.95rem; height: 0.95rem; }
+  .mc__note--ship { color: var(--c-accent-deep); }
+  .mc__note--low { color: var(--c-warning); }
+  .mc__note--low .icon { color: var(--c-warning-icon); }
+  .mc__note--out { color: var(--c-danger); font-weight: 600; }
+  .mc.is-out .mc__media img { opacity: 0.55; filter: grayscale(0.6); }
+  .mc:active { border-color: var(--c-line-strong); }
+
+  /* ---------- لافتة القسم (3 أعمدة) ---------- */
+  .mbn {
+    position: relative; overflow: hidden; padding: 12px 10px 14px; border-radius: 16px; color: var(--c-white);
+    background:
+      radial-gradient(55% 60% at 12% 100%, color-mix(in srgb, var(--c-accent) 75%, transparent), transparent),
+      radial-gradient(50% 55% at 92% 0%, color-mix(in srgb, var(--c-accent-mid) 40%, transparent), transparent),
+      linear-gradient(160deg, var(--c-ink), var(--c-accent-deep));
+  }
+  .mbn--accent { background: radial-gradient(60% 60% at 90% 100%, color-mix(in srgb, var(--c-accent-mid) 45%, transparent), transparent), linear-gradient(160deg, var(--c-accent), var(--c-accent-deep)); }
+  .mbn--ink { background: radial-gradient(60% 60% at 8% 0%, color-mix(in srgb, var(--c-accent) 55%, transparent), transparent), linear-gradient(160deg, var(--c-ink), var(--c-ink-2)); }
+  .mbn__title { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 6px; font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; text-align: center; justify-content: center; }
+  .mbn__title::before, .mbn__title::after { content: ""; flex: 1; height: 1px; background: linear-gradient(to left, transparent, var(--c-on-dark-2)); opacity: 0.6; }
+  .mbn__title::after { transform: scaleX(-1); }
+  .mbn__cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .mbn__col { display: grid; justify-items: center; align-content: start; gap: 6px; text-align: center; }
+  .mbn__col img { width: 100%; height: 108px; object-fit: contain; filter: drop-shadow(0 6px 10px color-mix(in srgb, var(--c-ink) 55%, transparent)); }
+  .mbn__col strong { font-family: var(--font-display); font-size: 0.82rem; line-height: 1.3; text-shadow: 0 0 14px var(--c-accent-mid); }
+  .mbn__btn {
+    display: inline-flex; align-items: center; min-height: 26px; padding: 0 0.7rem; border-radius: var(--r-pill);
+    border: 1px solid var(--c-on-dark-2); background: color-mix(in srgb, var(--c-ink) 55%, transparent); font-size: 0.68rem; font-weight: 600;
+  }
+  .mbn__col:active .mbn__btn { background: var(--c-white); color: var(--c-ink); }
+
+  /* ---------- أكواد الخصم ---------- */
+  .mcoupon {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--sp-2); flex: 0 0 auto; width: 268px;
+    padding: 0.6rem 0.5rem 0.6rem 0.8rem; border: 1.5px dashed var(--c-line-on-dark); border-radius: var(--r-sm);
+    background: var(--c-ink); color: var(--c-on-dark);
+  }
+  .mcoupon__code { display: block; font-family: var(--font-display); font-weight: 700; letter-spacing: 0.08em; }
+  .mcoupon__desc { display: block; font-size: var(--fs-xs); line-height: 1.4; color: var(--c-on-dark-2); }
+  .mcoupon button { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; }
+  .mcoupon button:active { background: color-mix(in srgb, var(--c-on-dark) 18%, transparent); }
+
+  /* ---------- باقي الصفحة ---------- */
+  .m-home + .section, .recs-cta { margin-top: var(--sp-4); }
+  .site-footer { margin-top: var(--sp-7); }
+}

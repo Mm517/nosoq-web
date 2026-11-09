@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>إتمام الطلب | نَسَق</title>
+  <meta name="description" content="أدخل بيانات الشحن والدفع لإتمام طلبك من نَسَق.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2315171c'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%232f45d4'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="/assets/css/tokens.css">
+  <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/components.css">
+  <link rel="stylesheet" href="/assets/css/mobile-app.css">
+  <script src="/assets/js/skeleton.js"></script>
+  <link rel="stylesheet" href="/assets/css/pages.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="/assets/js/nasaq-config.js"></script>
+  <script src="/assets/js/nasaq-links.js"></script>
+  <script src="/assets/js/api-shim.js"></script>
+  <script src="/assets/js/buyer-location.js"></script>
+  <script defer src="/assets/js/cloud.js"></script>
+  <script defer src="/assets/js/products.js"></script>
+  <script defer src="/assets/js/market.js"></script>
+  <script defer src="/assets/js/cart.js"></script>
+  <script defer src="/assets/js/i18n-dict.js"></script>
+  <script defer src="/assets/js/i18n.js"></script>
+  <script defer src="/assets/js/geo.js"></script>
+  <script defer src="/assets/js/ui.js"></script>
+  <script defer src="/assets/js/checkout.js"></script>
+</head>
+<body data-page="checkout">
+  <header id="site-header" class="site-header"></header>
+  <noscript><p style="padding:1rem;text-align:center">يحتاج إتمام الطلب إلى تفعيل JavaScript.</p></noscript>
+
+  <main id="main" tabindex="-1">
+    <div class="container">
+      <div class="page-head">
+        <nav class="breadcrumb" aria-label="مسار التنقل">
+          <ol>
+            <li><a href="/">الرئيسية</a></li>
+            <li><a href="/cart">السلة</a></li>
+            <li><span aria-current="page">إتمام الطلب</span></li>
+          </ol>
+        </nav>
+        <h1>إتمام الطلب</h1>
+      </div>
+
+      <div id="checkout-root" aria-busy="true">
+        <div class="checkout">
+          <form id="checkout-form" class="checkout__form" novalidate>
+            <div id="form-errors" class="form-errors" role="alert" tabindex="-1" hidden></div>
+
+            <fieldset class="fieldset">
+              <legend>بيانات التواصل</legend>
+              <div class="form-grid form-grid--2">
+                <div class="field span-2">
+                  <label for="f-name">الاسم الكامل</label>
+                  <input class="input" id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="err-f-name">
+                  <p class="field__error" id="err-f-name"></p>
+                </div>
+                <div class="field">
+                  <label for="f-email">البريد الإلكتروني</label>
+                  <input class="input" id="f-email" name="email" type="email" autocomplete="email" dir="ltr" required aria-describedby="err-f-email">
+                  <p class="field__error" id="err-f-email"></p>
+                </div>
+                <div class="field">
+                  <label for="f-phone">رقم الجوال</label>
+                  <input class="input" id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required aria-describedby="err-f-phone">
+                  <p class="field__error" id="err-f-phone"></p>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend>عنوان الشحن</legend>
+              <div class="form-grid form-grid--2">
+                <div class="field span-2">
+                  <label for="f-address">العنوان</label>
+                  <input class="input" id="f-address" name="address" type="text" autocomplete="street-address" placeholder="الحي، الشارع، رقم المبنى" required aria-describedby="err-f-address">
+                  <p class="field__error" id="err-f-address"></p>
+                </div>
+                <div class="field">
+                  <label for="f-city">المدينة</label>
+                  <input class="input" id="f-city" name="city" type="text" autocomplete="address-level2" required aria-describedby="err-f-city">
+                  <p class="field__error" id="err-f-city"></p>
+                </div>
+                <div class="field">
+                  <label for="f-postal">الرمز البريدي <span class="field__hint">(اختياري)</span></label>
+                  <input class="input" id="f-postal" name="postal" type="text" autocomplete="postal-code" dir="ltr" aria-describedby="err-f-postal">
+                  <p class="field__error" id="err-f-postal"></p>
+                </div>
+                <div class="field span-2">
+                  <label for="f-notes">ملاحظات للتوصيل <span class="field__hint">(اختياري)</span></label>
+                  <textarea class="textarea" id="f-notes" name="notes" rows="2"></textarea>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend>طريقة الشحن</legend>
+              <div class="pay-options">
+                <label class="radio-card">
+                  <input type="radio" name="shipping" value="standard" checked>
+                  <span class="radio-card__main"><strong>شحن عادي</strong><small>من 3 إلى 5 أيام عمل</small></span>
+                  <span class="radio-card__price" data-ship-price="standard"></span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="shipping" value="express">
+                  <span class="radio-card__main"><strong>شحن سريع</strong><small>من 1 إلى 2 يوم عمل</small></span>
+                  <span class="radio-card__price" data-ship-price="express"></span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend>طريقة الدفع</legend>
+              <div class="pay-options">
+                <label class="radio-card">
+                  <input type="radio" name="payment" value="card" checked>
+                  <span class="radio-card__main"><strong>بطاقة بنكية</strong><small>Visa، Mastercard، مدى</small></span>
+                </label>
+                <div class="card-fields" id="card-fields">
+                  <div class="field">
+                    <label for="f-card">رقم البطاقة</label>
+                    <input class="input" id="f-card" name="cardnumber" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" dir="ltr" aria-describedby="err-f-card hint-card">
+                    <p class="field__hint" id="hint-card">للتجربة: 4242 4242 4242 4242</p>
+                    <p class="field__error" id="err-f-card"></p>
+                  </div>
+                  <div class="field">
+                    <label for="f-cardname">الاسم على البطاقة</label>
+                    <input class="input" id="f-cardname" name="cardname" type="text" autocomplete="cc-name" aria-describedby="err-f-cardname">
+                    <p class="field__error" id="err-f-cardname"></p>
+                  </div>
+                  <div class="form-grid form-grid--2">
+                    <div class="field">
+                      <label for="f-exp">تاريخ الانتهاء</label>
+                      <input class="input" id="f-exp" name="exp" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" dir="ltr" aria-describedby="err-f-exp">
+                      <p class="field__error" id="err-f-exp"></p>
+                    </div>
+                    <div class="field">
+                      <label for="f-cvv">رمز الأمان (CVV)</label>
+                      <input class="input" id="f-cvv" name="cvv" type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="123" dir="ltr" aria-describedby="err-f-cvv">
+                      <p class="field__error" id="err-f-cvv"></p>
+                    </div>
+                  </div>
+                </div>
+                <label class="radio-card">
+                  <input type="radio" name="payment" value="cod">
+                  <span class="radio-card__main"><strong>الدفع عند الاستلام</strong><small>ادفع نقداً للمندوب عند وصول الطلب</small></span>
+                </label>
+              </div>
+              <p class="secure-note">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-lock"></use></svg>
+                بياناتك مشفّرة ولا تُخزَّن على هذا الجهاز.
+              </p>
+            </fieldset>
+
+            <div class="field">
+              <label class="check" for="f-terms">
+                <input type="checkbox" id="f-terms" aria-describedby="err-f-terms">
+                <span>أوافق على شروط الشراء وسياسة الإرجاع</span>
+              </label>
+              <p class="field__error" id="err-f-terms"></p>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--lg btn--block" id="pay-btn">
+              <span data-pay-label>إتمام الطلب</span>
+              <span data-pay-total></span>
+            </button>
+          </form>
+
+          <aside class="checkout__side" aria-label="ملخص الطلب">
+            <div class="checkout__side-inner" id="checkout-summary"></div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+</body>
+</html>

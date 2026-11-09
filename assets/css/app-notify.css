@@ -1,0 +1,49 @@
+/* ==========================================================================
+   css/app-notify.css — إشعار بشكل إشعارات تطبيقات الموبايل (نظام التشغيل)
+   يظهر مرة واحدة لكل جلسة تصفح، على الموبايل فقط (أقل من 768px).
+   شاشة الكمبيوتر لا تتأثر إطلاقاً — نفس مبدأ mobile-home.css.
+   ========================================================================== */
+.app-notify { display: none; }
+
+@media (max-width: 767px) {
+  .app-notify {
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    position: fixed; inset-inline: 0.6rem; inset-block-start: 0.6rem;
+    inset-block-start: calc(env(safe-area-inset-top, 0px) + 0.6rem);
+    z-index: 130; max-width: 440px; margin-inline: auto;
+    padding: 0.8rem 0.85rem; border-radius: 18px;
+    background: var(--c-glass); backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow: 0 10px 30px rgba(21, 23, 28, 0.18), 0 1px 0 rgba(21, 23, 28, 0.04);
+    border: 1px solid var(--c-line);
+    transform: translateY(-130%); opacity: 0;
+    transition: transform 0.42s cubic-bezier(.2, .9, .27, 1.4), opacity 0.28s ease;
+    touch-action: pan-y;
+  }
+  .app-notify.is-in { transform: translateY(0); opacity: 1; }
+  .app-notify.is-out { transform: translateY(-130%); opacity: 0; transition-duration: 0.28s; }
+
+  .app-notify__icon {
+    flex: none; width: 38px; height: 38px; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(21, 23, 28, 0.25);
+  }
+  .app-notify__icon svg { display: block; width: 100%; height: 100%; }
+
+  .app-notify__body { flex: 1; min-width: 0; }
+  .app-notify__meta { display: flex; align-items: center; gap: 0.3rem; margin-bottom: 0.15rem; font-size: var(--fs-xs); color: var(--c-ink-3); }
+  .app-notify__app { font-weight: 700; color: var(--c-ink-2); letter-spacing: 0.01em; }
+  .app-notify__dot { opacity: 0.6; }
+  .app-notify__title { font-size: var(--fs-sm); font-weight: 700; color: var(--c-ink); line-height: 1.4; }
+  .app-notify__text { margin-top: 0.1rem; font-size: var(--fs-xs); color: var(--c-ink-2); line-height: 1.45; }
+
+  .app-notify__close {
+    flex: none; width: 26px; height: 26px; margin-inline-start: 0.1rem;
+    display: grid; place-items: center; border-radius: 50%; color: var(--c-ink-3);
+  }
+  .app-notify__close svg { width: 15px; height: 15px; }
+  .app-notify__close:hover, .app-notify__close:active { background: var(--c-surface); color: var(--c-ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app-notify { transition-duration: 0.01ms; }
+  }
+}

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#12294a"><title>تتبّع الطلب — نَسَق</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/admin.css"><link rel="stylesheet" href="/assets/css/admin-pro.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="/assets/js/nasaq-config.js"></script>
+<script src="/assets/js/icons.js"></script>
+<style>
+.tr{max-width:1000px;margin:0 auto;padding:22px 16px 60px}.tr h1{margin:0}.tr .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.tr .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px}
+.tr .box{background:var(--a-card);border:1px solid var(--a-line);border-radius:var(--a-r);padding:18px;box-shadow:var(--a-shadow);margin-bottom:16px}
+.tr .box h2{margin:0 0 14px;font-size:17px}.tr .k{color:var(--a-muted);font-size:12px}.tr .v{font-weight:800;font-size:18px}
+.steps{display:flex;gap:0;overflow-x:auto;padding:6px 0 4px}.st{flex:1;min-width:104px;text-align:center;position:relative;color:var(--a-muted);font-size:12px}
+.st i{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--a-line);margin:0 auto 6px;font-style:normal;font-weight:800;position:relative;z-index:1}
+.st::before{content:'';position:absolute;top:16px;inset-inline:-50% 50%;height:3px;background:var(--a-line)}.st:first-child::before{display:none}
+.st.done{color:var(--a-ink)}.st.done i{background:#2563c9;color:#fff}.st.done::before{background:#2563c9}
+.st.cur i{box-shadow:0 0 0 5px var(--a-primary-soft)}.st small{display:block;font-size:11px;color:var(--a-muted)}
+.bad{background:var(--a-bad-soft);color:var(--a-bad);padding:8px 12px;border-radius:10px;font-weight:700}
+.hd-ic{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.hd-ic .ic{color:var(--a-primary)}.st i .ic{display:block}.tl{list-style:none;margin:0;padding:0}.tl li{padding:8px 0;border-bottom:1px solid var(--a-line);display:flex;justify-content:space-between;gap:10px;font-size:14px}
+</style></head>
+<body class="admin-body"><div class="tr" id="root"><p class="admin-empty">جاري التحميل…</p></div>
+<script>
+(function(){
+const sb=supabase.createClient(NASAQ_SUPABASE_URL,NASAQ_SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+const $r=document.getElementById('root'),id=new URLSearchParams(location.search).get('id');
+const I=(n,z)=>window.NIcon?window.NIcon(n,{size:z||18}):'';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const N=n=>Number(n||0).toLocaleString('en-US',{maximumFractionDigits:2}),M=n=>N(n)+' ج.م';
+const D=d=>d?new Date(d).toLocaleString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}):'';
+const L={new:'جديد',accepted:'قبله المتجر',preparing:'قيد التجهيز',ready:'جاهز للاستلام',out_for_delivery:'مع السائق',delivered:'تم التسليم',cancelled:'ملغي',returned:'مرتجع',processing:'قيد التجهيز',shipped:'في الطريق',completed:'مكتمل',unassigned:'بدون سائق',assigned:'تم تعيين سائق',picked_up:'تم الاستلام',failed:'فشل التسليم',paid:'مدفوع',pending:'معلّق',refunded:'مسترد'};
+const STEPS=['new','accepted','preparing','ready','out_for_delivery','delivered'];
+const who={admin:'الإدارة',seller:'البائع',rider:'السائق',customer:'العميل',system:'النظام'};
+function fail(m){$r.innerHTML='<div class="box"><p class="bad">'+esc(m)+'</p><p><a class="admin-button" href="/admin">'+I('chev-right',16)+'<span>لوحة الإدارة</span></a></p></div>'}
+async function load(){
+  if(!id)return fail('رقم الطلب غير موجود في الرابط.');
+  const {data:s}=await sb.auth.getSession();if(!s.session)return fail('سجّل الدخول من لوحة الإدارة أولاً.');
+  const {data,error}=await sb.rpc('admin_order_tracking',{p_order:id});
+  if(error)return fail(error.message);if(!data||!data.order)return fail('الطلب غير موجود.');
+  draw(data);
+}
+function draw(d){
+  const o=d.order,c=o.customer||{};
+  const so=d.store_orders.map(x=>{
+    const hist=d.history.filter(h=>h.store_order_id===x.id),del=d.deliveries.find(y=>y.store_order_id===x.id);
+    const at=st=>{const h=hist.find(z=>z.status===st);return h?D(h.at):''};
+    const idx=STEPS.indexOf(x.status),bad=['cancelled','returned'].includes(x.status);
+    return '<div class="box"><h2 class="hd-ic">'+I('store',20)+'<span>'+esc(x.store_name)+'</span> <span class="admin-count">'+M(x.subtotal)+'</span></h2>'+
+      (bad?'<p class="bad">حالة الطلب: '+L[x.status]+'</p>':'')+
+      '<div class="steps">'+STEPS.map((st,i)=>'<div class="st '+(i<=idx?'done':'')+(i===idx?' cur':'')+'"><i>'+(i<=idx?I('check',16):i+1)+'</i>'+L[st]+'<small>'+esc(at(st))+'</small></div>').join('')+'</div>'+
+      '<div class="grid" style="margin-top:14px"><div><div class="k">هاتف المتجر</div><div class="v" dir="ltr">'+esc(x.store_phone||'—')+'</div></div>'+
+      '<div><div class="k">التوصيل</div><div class="v">'+(del?L[del.status]||del.status:'—')+'</div></div>'+
+      '<div><div class="k">السائق</div><div class="v">'+esc(del&&del.rider_name||'لم يُعيَّن بعد')+'</div><div class="k" dir="ltr">'+esc(del&&del.rider_phone||'')+'</div></div>'+
+      '<div><div class="k">تحصيل عند التسليم</div><div class="v">'+M(del&&del.cod_amount)+'</div></div></div>'+
+      (del?'<ul class="tl"><li><span>طلب التوصيل</span><span>'+D(del.requested_at)+'</span></li>'+(del.assigned_at?'<li><span>تعيين السائق</span><span>'+D(del.assigned_at)+'</span></li>':'')+(del.picked_up_at?'<li><span>استلام من المتجر</span><span>'+D(del.picked_up_at)+'</span></li>':'')+(del.delivered_at?'<li><span>تم التسليم للعميل</span><span>'+D(del.delivered_at)+'</span></li>':'')+'</ul>':'')+'</div>';
+  }).join('')||'<div class="box"><p class="admin-empty">لا توجد طلبات متاجر لهذا الطلب.</p></div>';
+  $r.innerHTML='<div class="top"><a class="admin-button" href="/admin">'+I('chev-right',16)+'<span>لوحة الإدارة</span></a><h1>طلب <bdi dir="ltr">#'+esc(o.order_number)+'</bdi></h1><span class="admin-badge admin-badge--'+esc(o.status)+'">'+(L[o.status]||o.status)+'</span><span style="margin-inline-start:auto;display:flex;gap:8px"><button class="admin-button" id="rf">'+I('refresh',16)+'<span>تحديث</span></button><button class="admin-button admin-button--danger" id="del">'+I('trash',16)+'<span>حذف الطلب</span></button></span></div>'+
+  '<div class="box"><div class="grid"><div><div class="k">العميل</div><div class="v">'+esc(c.name||'—')+'</div></div><div><div class="k">الهاتف</div><div class="v" dir="ltr">'+esc(c.phone||'—')+'</div></div><div><div class="k">العنوان</div><div class="v" style="font-size:14px">'+esc(c.address||c.city||'—')+'</div></div><div><div class="k">التاريخ</div><div class="v" style="font-size:15px">'+D(o.created_at)+'</div></div></div>'+
+  '<div class="grid"><div><div class="k">الإجمالي</div><div class="v">'+M(o.total)+'</div></div><div><div class="k">الشحن</div><div class="v">'+M(o.shipping)+'</div></div><div><div class="k">الخصم</div><div class="v">'+M(o.discount)+'</div></div><div><div class="k">الدفع</div><div class="v">'+(o.payment==='cod'?'عند الاستلام':esc(o.payment))+'</div></div></div></div>'+
+  so+
+  '<div class="box"><h2>المنتجات ('+N(d.items.length)+')</h2><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>المنتج</th><th>المقاس/اللون</th><th>الكمية</th><th>السعر</th></tr></thead><tbody>'+d.items.map(i=>'<tr><td>'+esc(i.product_name)+'</td><td>'+esc([i.size,i.color].filter(Boolean).join(' / ')||'—')+'</td><td>'+N(i.quantity)+'</td><td>'+M(i.unit_price)+'</td></tr>').join('')+'</tbody></table></div></div>'+
+  '<div class="box"><h2>سجل الحالات</h2><ul class="tl">'+(d.history.map(h=>'<li><span>'+(L[h.status]||esc(h.status))+' <small class="k">('+(who[h.by]||esc(h.by||'—'))+')</small></span><span>'+D(h.at)+'</span></li>').join('')||'<li>لا يوجد سجل.</li>')+'</ul></div>';
+  document.getElementById('rf').onclick=load;
+  document.getElementById('del').onclick=async function(){
+    if(!confirm('حذف الطلب #'+o.order_number+' نهائياً؟\nهيتمسح مع بنوده وتوصيلاته ومعاملاته المالية، والإجراء ده مينفعش يترجع فيه.'))return;
+    this.disabled=true;
+    const {error}=await sb.rpc('admin_delete_entity',{p_kind:'order',p_id:String(o.id)});
+    if(error){alert(error.message);this.disabled=false;return}
+    location.href='/admin';
+  };
+}
+load();setInterval(()=>{if(!document.hidden)load()},15000);
+})();
+</script></body></html>
